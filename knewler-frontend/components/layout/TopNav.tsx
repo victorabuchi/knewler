@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: 'Schedule', href: '/dashboard/schedule' },
   { label: 'Exams', href: '/dashboard/exams' },
   { label: 'Certificates', href: '/dashboard/certificates' },
+  { label: 'Settings', href: '/dashboard/settings' },
 ];
 
 const ROLE_BADGE: Record<string, { bg: string; color: string; border: string; label: string }> = {
