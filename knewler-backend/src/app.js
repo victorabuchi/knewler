@@ -6,7 +6,19 @@ const fastify = require('fastify')({ logger: true })
 
 // Plugins
 fastify.register(require('@fastify/cors'), {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3004',
+  origin: (origin, callback) => {
+    const allowed = [
+      'http://localhost:3004',
+      'https://knewler-frontend.onrender.com',
+      'https://knewler.com',
+      'https://www.knewler.com'
+    ]
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'), false)
+    }
+  },
   credentials: true
 })
 
