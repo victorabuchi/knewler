@@ -35,6 +35,9 @@ fastify.get('/health', async (request, reply) => {
 // Routes
 fastify.register(require('./routes/auth'))
 fastify.register(require('./routes/courses'))
+fastify.register(require('./routes/students'))
+fastify.register(require('./routes/schedule'))
+fastify.register(require('./routes/exams'))
 
 
 // Start server
