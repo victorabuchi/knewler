@@ -107,7 +107,8 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => {
-              window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://knewler-backend.onrender.com') + '/api/auth/google'
+              localStorage.setItem('knewler_oauth_intent', 'login')
+              window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://knewler-backend.onrender.com') + '/api/auth/google?intent=login'
             }}
             style={{
               width: '100%',

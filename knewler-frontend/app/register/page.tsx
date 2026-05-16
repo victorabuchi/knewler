@@ -125,6 +125,53 @@ export default function RegisterPage() {
             </div>
           )}
 
+          {/* Google OAuth */}
+          <button
+            type="button"
+            onClick={() => {
+              localStorage.setItem('knewler_oauth_intent', 'register')
+              window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://knewler-backend.onrender.com') + '/api/auth/google?intent=register'
+            }}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              background: '#ffffff',
+              color: '#374151',
+              border: '1px solid #E2E8F0',
+              borderRadius: '8px',
+              fontSize: '0.9375rem',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.625rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M47.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h13.2c-.6 3-2.3 5.5-4.9 7.2v6h7.9c4.6-4.3 7.3-10.6 7.3-17.2z"/>
+              <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.9-6c-2.1 1.4-4.8 2.3-8 2.3-6.1 0-11.3-4.1-13.2-9.7H2.6v6.2C6.5 42.6 14.7 48 24 48z"/>
+              <path fill="#FBBC05" d="M10.8 28.8A14.8 14.8 0 0 1 10 24c0-1.7.3-3.3.8-4.8v-6.2H2.6A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l8.2-6z"/>
+              <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.7 0 6.5 5.4 2.6 13.2l8.2 6.2C12.7 13.6 17.9 9.5 24 9.5z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          {/* Divider */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }} />
+            <span style={{ fontSize: '0.8125rem', color: '#94A3B8', whiteSpace: 'nowrap' }}>or sign up with email</span>
+            <div style={{ flex: 1, height: '1px', background: '#E2E8F0' }} />
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div style={fieldStyle}>
               <label style={labelStyle}>Institution name</label>
