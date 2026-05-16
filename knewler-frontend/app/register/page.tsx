@@ -44,12 +44,10 @@ export default function RegisterPage() {
       localStorage.setItem('knewler_tenant', JSON.stringify(res.data.tenant));
       router.push('/onboarding');
     } catch (err: unknown) {
-      const message =
-        err &&
-        typeof err === 'object' &&
-        'response' in err &&
-        (err as { response?: { data?: { message?: string } } }).response?.data?.message;
-      setError(message || 'Registration failed. Please try again.');
+      const message = err instanceof Error
+        ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message
+        : 'Registration failed. Please try again.'
+      setError(message)
     } finally {
       setLoading(false);
     }

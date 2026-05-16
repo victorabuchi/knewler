@@ -22,13 +22,10 @@ export default function CreateCoursePage() {
       await api.post('/api/courses', { title, description, status });
       router.push('/dashboard/courses');
     } catch (err: unknown) {
-      const message =
-        err &&
-        typeof err === 'object' &&
-        'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error
-          : undefined;
-      setError(message || 'Failed to create course. Please try again.');
+      const message = err instanceof Error
+        ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message
+        : 'Failed to create course. Please try again.'
+      setError(message)
     } finally {
       setLoading(false);
     }

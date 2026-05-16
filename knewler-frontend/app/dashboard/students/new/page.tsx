@@ -30,13 +30,10 @@ export default function NewStudentPage() {
       });
       router.push('/dashboard/students');
     } catch (err: unknown) {
-      const message =
-        err &&
-        typeof err === 'object' &&
-        'response' in err
-          ? (err as { response?: { data?: { error?: string } } }).response?.data?.error
-          : undefined;
-      setError(message || 'Failed to add student. Please try again.');
+      const message = err instanceof Error
+        ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message
+        : 'Failed to add student. Please try again.'
+      setError(message)
     } finally {
       setLoading(false);
     }

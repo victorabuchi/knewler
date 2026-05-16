@@ -25,12 +25,10 @@ export default function LoginPage() {
       login(res.data.token, res.data.user);
       router.push('/dashboard');
     } catch (err: unknown) {
-      const message =
-        err &&
-        typeof err === 'object' &&
-        'response' in err &&
-        (err as { response?: { data?: { message?: string } } }).response?.data?.message;
-      setError(message || 'Login failed. Please try again.');
+      const message = err instanceof Error
+        ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message
+        : 'Login failed. Please try again.'
+      setError(message)
     } finally {
       setLoading(false);
     }
