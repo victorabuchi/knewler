@@ -6,7 +6,7 @@ import { AuthProvider } from '@/lib/auth'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Knewler — From knowing to mastering',
+  title: 'Knewler',
   description: 'Multi-tenant eLearning platform. Universities, companies and sports clubs launch their own branded training environment in minutes.',
   icons: {
     icon: '/knewler-favicon.svg',
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     apple: '/knewler-favicon.svg',
   },
   openGraph: {
-    title: 'Knewler — From knowing to mastering',
+    title: 'Knewler',
     description: 'Launch your institution\'s eLearning environment in minutes.',
     url: 'https://knewler.com',
     siteName: 'Knewler',
