@@ -67,52 +67,58 @@ module.exports = async function authRoutes(fastify) {
 
   // Login
   fastify.post('/api/auth/login', async (request, reply) => {
-    const { email, password, slug } = request.body
+    const { email, password } = request.body
 
-    if (!email || !password || !slug) {
-      return reply.status(400).send({ error: 'Email, password and institution slug are required' })
+    if (!email || !password) {
+      return reply.status(400).send({ error: 'Email and password are required' })
     }
 
-    // Find tenant by slug
-    const tenantResult = await db.query(
-      'SELECT id, name, slug, type, plan FROM tenants WHERE slug = $1',
-      [slug]
+    // Find user by email across all tenants
+    const result = await db.query(
+      `SELECT users.*, tenants.id AS t_id, tenants.name AS t_name, tenants.slug AS t_slug,
+              tenants.type AS t_type, tenants.plan AS t_plan, tenants.custom_domain AS t_custom_domain
+       FROM users
+       JOIN tenants ON users.tenant_id = tenants.id
+       WHERE users.email = $1 AND users.is_active = true
+       LIMIT 1`,
+      [email]
     )
-    if (!tenantResult.rows[0]) {
-      return reply.status(404).send({ error: 'Institution not found' })
-    }
-    const tenant = tenantResult.rows[0]
 
-    // Find user
-    const userResult = await db.query(
-      'SELECT * FROM users WHERE tenant_id = $1 AND email = $2 AND is_active = true',
-      [tenant.id, email]
-    )
-    if (!userResult.rows[0]) {
+    if (!result.rows[0]) {
       return reply.status(401).send({ error: 'Invalid email or password' })
     }
-    const user = userResult.rows[0]
 
-    const valid = await bcrypt.compare(password, user.password_hash)
+    const row = result.rows[0]
+
+    const valid = await bcrypt.compare(password, row.password_hash)
     if (!valid) {
       return reply.status(401).send({ error: 'Invalid email or password' })
     }
 
+    const tenant = {
+      id: row.t_id,
+      name: row.t_name,
+      slug: row.t_slug,
+      type: row.t_type,
+      plan: row.t_plan,
+      custom_domain: row.t_custom_domain,
+    }
+
     const token = fastify.jwt.sign(
-      { id: user.id, email: user.email, role: user.role, tenant_id: tenant.id },
+      { id: row.id, email: row.email, role: row.role, tenant_id: row.tenant_id },
       { expiresIn: '7d' }
     )
 
     return reply.send({
       token,
       user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        first_name: user.first_name,
-        last_name: user.last_name
+        id: row.id,
+        email: row.email,
+        role: row.role,
+        first_name: row.first_name,
+        last_name: row.last_name,
       },
-      tenant
+      tenant,
     })
   })
 

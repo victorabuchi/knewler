@@ -12,7 +12,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [slug, setSlug] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +20,7 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await api.post('/api/auth/login', { email, password, slug });
+      const res = await api.post('/api/auth/login', { email, password });
       login(res.data.token, res.data.user);
       router.push('/dashboard');
     } catch (err: unknown) {
@@ -117,7 +116,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div style={{ marginBottom: '1rem' }}>
+            <div style={{ marginBottom: '1.75rem' }}>
               <label style={labelStyle}>Password</label>
               <input
                 type="password"
@@ -127,21 +126,6 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 style={inputStyle}
               />
-            </div>
-
-            <div style={{ marginBottom: '1.75rem' }}>
-              <label style={labelStyle}>Institution</label>
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                required
-                autoComplete="organization"
-                style={inputStyle}
-              />
-              <p style={{ margin: '0.35rem 0 0', fontSize: '0.8125rem', color: '#64748B' }}>
-                your institution's unique identifier
-              </p>
             </div>
 
             <button
