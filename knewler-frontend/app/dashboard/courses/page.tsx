@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import api from '@/lib/api';
+import { useWindowWidth } from '@/lib/useWindowWidth';
 
 interface Course {
   id: string;
@@ -40,6 +41,8 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const width = useWindowWidth();
+  const isMobile = width < 768;
 
   useEffect(() => {
     api
@@ -182,7 +185,7 @@ export default function CoursesPage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
             gap: '1.25rem',
           }}
         >

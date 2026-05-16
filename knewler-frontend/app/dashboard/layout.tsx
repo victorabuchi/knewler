@@ -3,11 +3,14 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
+import { useWindowWidth } from '@/lib/useWindowWidth';
 import TopNav from '@/components/layout/TopNav';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { user, isLoading } = useAuth();
+  const width = useWindowWidth();
+  const isMobile = width < 768;
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -44,7 +47,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             maxWidth: '1200px',
             margin: '0 auto',
             width: '100%',
-            padding: '32px',
+            padding: isMobile ? '16px' : '32px',
+            boxSizing: 'border-box',
           }}
         >
           {children}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
+import { useWindowWidth } from '@/lib/useWindowWidth';
 
 interface Tenant {
   name?: string;
@@ -33,6 +34,8 @@ const QUICK_ACTIONS = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const width = useWindowWidth();
+  const isMobile = width < 768;
   const [tenant, setTenant] = useState<Tenant | null>(null);
 
   useEffect(() => {
@@ -64,7 +67,7 @@ export default function DashboardPage() {
       <div style={{ marginBottom: '2rem' }}>
         <h1
           style={{
-            fontSize: '24px',
+            fontSize: isMobile ? '20px' : '24px',
             fontWeight: 700,
             color: '#1a1a2e',
             margin: '0 0 0.25rem',
@@ -81,13 +84,13 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Stat cards — 4-column row */}
+      {/* Stat cards */}
       <div style={{ marginBottom: '2.5rem' }}>
         <p style={sectionHeadingStyle}>Overview</p>
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
             gap: '1rem',
           }}
         >
@@ -98,13 +101,13 @@ export default function DashboardPage() {
                 background: '#ffffff',
                 border: '1px solid #E2E8F0',
                 borderRadius: '12px',
-                padding: '24px',
+                padding: isMobile ? '16px' : '24px',
               }}
             >
               <p
                 style={{
                   margin: '0 0 0.5rem',
-                  fontSize: '0.8125rem',
+                  fontSize: '0.75rem',
                   color: '#64748B',
                   fontWeight: 500,
                   textTransform: 'uppercase',
@@ -115,7 +118,7 @@ export default function DashboardPage() {
               </p>
               <span
                 style={{
-                  fontSize: '2rem',
+                  fontSize: isMobile ? '1.5rem' : '2rem',
                   fontWeight: 700,
                   color: '#0369A1',
                   lineHeight: 1,
@@ -131,13 +134,19 @@ export default function DashboardPage() {
       {/* Quick actions */}
       <div style={{ marginBottom: '2.5rem' }}>
         <p style={sectionHeadingStyle}>Quick actions</p>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: '0.75rem',
+          }}
+        >
           {QUICK_ACTIONS.map(({ label, href }) => (
             <Link
               key={href}
               href={href}
               style={{
-                display: 'inline-block',
+                display: 'block',
                 padding: '0.625rem 1.25rem',
                 background: '#0369A1',
                 color: '#ffffff',
@@ -145,6 +154,7 @@ export default function DashboardPage() {
                 fontSize: '0.9375rem',
                 fontWeight: 600,
                 textDecoration: 'none',
+                textAlign: isMobile ? 'center' : 'left',
               }}
             >
               {label}

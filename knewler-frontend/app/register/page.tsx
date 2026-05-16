@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { useWindowWidth } from '@/lib/useWindowWidth';
 
 const INSTITUTION_TYPES = [
   { value: 'university', label: 'University' },
@@ -17,6 +18,8 @@ const INSTITUTION_TYPES = [
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const width = useWindowWidth();
+  const isMobile = width < 768;
 
   const [institutionName, setInstitutionName] = useState('');
   const [type, setType] = useState('university');
@@ -83,10 +86,10 @@ export default function RegisterPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem 1rem',
+        padding: isMobile ? '2rem 16px' : '2rem 1rem',
       }}
     >
-      <div style={{ width: '100%', maxWidth: '460px' }}>
+      <div style={{ width: '100%', maxWidth: isMobile ? '100%' : '460px' }}>
         {/* Wordmark + tagline above card */}
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div style={{ fontSize: '28px', fontWeight: 700, letterSpacing: '-0.02em' }}>
@@ -104,7 +107,7 @@ export default function RegisterPage() {
             background: '#ffffff',
             border: '1px solid #E2E8F0',
             borderRadius: '12px',
-            padding: '40px',
+            padding: isMobile ? '24px' : '40px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           }}
         >

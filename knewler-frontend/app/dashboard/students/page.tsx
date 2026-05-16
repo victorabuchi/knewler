@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import api from '@/lib/api';
+import { useWindowWidth } from '@/lib/useWindowWidth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -40,7 +41,7 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const TH_STYLE: React.CSSProperties = {
-  padding: '0.75rem 1rem',
+  padding: '0.625rem 0.75rem',
   textAlign: 'left',
   fontSize: '0.75rem',
   fontWeight: 600,
@@ -48,6 +49,7 @@ const TH_STYLE: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.06em',
   borderBottom: '1px solid #E2E8F0',
+  whiteSpace: 'nowrap',
 };
 
 // ── Invite modal ──────────────────────────────────────────────────────────────
@@ -190,6 +192,8 @@ function InviteModal({
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function StudentsPage() {
+  const width = useWindowWidth();
+  const isMobile = width < 768;
   const [tab, setTab] = useState<'members' | 'invitations'>('members');
 
   // Members state
@@ -363,8 +367,8 @@ export default function StudentsPage() {
           )}
 
           {!studentsLoading && !studentsError && students.length > 0 && (
-            <div style={{ background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: '8px', overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <div style={{ background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: '8px', overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
                 <thead>
                   <tr style={{ background: '#F8FAFC' }}>
                     {['Name', 'Email', 'Role', 'Status', 'Enrolled', 'Actions'].map((col) => (
