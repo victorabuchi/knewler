@@ -25,7 +25,12 @@ export default function LoginPage() {
     try {
       const res = await api.post('/api/auth/login', { email, password });
       login(res.data.token, res.data.user);
-      router.push('/dashboard');
+      const role: string = res.data.user?.role ?? '';
+      if (role === 'student' || role === 'staff') {
+        router.push('/learn');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error
         ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message

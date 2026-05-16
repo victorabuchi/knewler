@@ -6,6 +6,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  role?: string;
   [key: string]: unknown;
 }
 
@@ -45,6 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tokenRef.current = token;
     localStorage.setItem("knewler_token", token);
     localStorage.setItem("knewler_user", JSON.stringify(userData));
+    localStorage.setItem("knewler_role", userData.role ?? "");
     setUser(userData);
   }
 
@@ -52,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tokenRef.current = null;
     localStorage.removeItem("knewler_token");
     localStorage.removeItem("knewler_user");
+    localStorage.removeItem("knewler_role");
     setUser(null);
   }
 
@@ -70,4 +73,9 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
+}
+
+export function getUserRole(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem("knewler_role") ?? "";
 }

@@ -20,12 +20,17 @@ function AuthCallbackContent() {
       const user = JSON.parse(userRaw);
       localStorage.setItem('knewler_token', token);
       localStorage.setItem('knewler_user', JSON.stringify(user));
+      localStorage.setItem('knewler_role', user.role ?? '');
+
+      const role: string = user.role ?? '';
+      if (role === 'student' || role === 'staff') {
+        router.push('/learn');
+      } else {
+        router.push('/dashboard');
+      }
     } catch {
       router.push('/login?error=oauth_failed');
-      return;
     }
-
-    router.push('/dashboard');
   }, [router, searchParams]);
 
   return (
