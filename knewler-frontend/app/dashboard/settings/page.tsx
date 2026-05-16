@@ -9,7 +9,6 @@ import api from '@/lib/api';
 interface Tenant {
   name: string;
   type: string;
-  primary_color: string;
   custom_domain: string | null;
   domain_verified: boolean;
   plan: string;
@@ -102,7 +101,6 @@ const cardStyle: React.CSSProperties = {
 function GeneralSection({ tenant }: { tenant: Tenant }) {
   const [name, setName] = useState(tenant.name);
   const [type, setType] = useState(tenant.type);
-  const [color, setColor] = useState(tenant.primary_color ?? '#0EA5E9');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -112,7 +110,7 @@ function GeneralSection({ tenant }: { tenant: Tenant }) {
     setError('');
     setSaving(true);
     try {
-      await api.put('/api/settings/general', { name, type, primary_color: color });
+      await api.put('/api/settings/general', { name, type });
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err: unknown) {
@@ -150,31 +148,13 @@ function GeneralSection({ tenant }: { tenant: Tenant }) {
           />
         </div>
 
-        <div style={{ marginBottom: '1.25rem' }}>
+        <div style={{ marginBottom: '2rem' }}>
           <label style={labelStyle}>Institution type</label>
           <select value={type} onChange={(e) => setType(e.target.value)} style={inputStyle}>
             {INSTITUTION_TYPES.map((t) => (
               <option key={t.value} value={t.value}>{t.label}</option>
             ))}
           </select>
-        </div>
-
-        <div style={{ marginBottom: '2rem' }}>
-          <label style={labelStyle}>Brand colour</label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              style={{ width: '44px', height: '38px', padding: '2px', border: '1px solid #E2E8F0', borderRadius: '8px', cursor: 'pointer', background: '#ffffff' }}
-            />
-            <input
-              type="text"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              style={{ ...inputStyle, width: '120px', fontFamily: 'monospace' }}
-            />
-          </div>
         </div>
 
         <button
