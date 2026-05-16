@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://knewler.com/favicon.ico" width="64" alt="Knewler" />
+  <img src="https://raw.githubusercontent.com/victorabuchi/knewler/main/knewler-frontend/public/knewler-favicon.svg" width="64" alt="Knewler" />
   <h1>Knewler</h1>
   <p>Multi-tenant eLearning platform. From knowing to mastering.</p>
   <p>
