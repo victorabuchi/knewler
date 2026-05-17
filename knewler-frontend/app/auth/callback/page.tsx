@@ -25,6 +25,8 @@ function AuthCallbackContent() {
       const role: string = user.role ?? '';
       if (role === 'student' || role === 'staff') {
         router.push('/learn');
+      } else if (role === 'admin' || role === 'teacher') {
+        router.push('/dashboard');
       } else {
         router.push('/dashboard');
       }

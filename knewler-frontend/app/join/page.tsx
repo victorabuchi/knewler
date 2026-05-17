@@ -82,7 +82,15 @@ function JoinContent() {
       localStorage.setItem('knewler_token', res.data.token);
       localStorage.setItem('knewler_user', JSON.stringify(res.data.user));
       localStorage.setItem('knewler_tenant', JSON.stringify(res.data.tenant));
-      router.push('/dashboard');
+      localStorage.setItem('knewler_role', res.data.user?.role ?? '');
+      const role: string = res.data.user?.role ?? '';
+      if (role === 'student' || role === 'staff') {
+        router.push('/learn');
+      } else if (role === 'admin' || role === 'teacher') {
+        router.push('/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error
         ? (err as { response?: { data?: { error?: string } } }).response?.data?.error ?? err.message

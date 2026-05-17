@@ -251,11 +251,13 @@ export default function StudentsPage() {
     if (tab === 'invitations') loadInvitations();
   }
 
-  const filtered = students.filter((s) => {
-    const q = query.toLowerCase();
-    const full = `${s.first_name} ${s.last_name}`.toLowerCase();
-    return full.includes(q) || s.email.toLowerCase().includes(q);
-  });
+  const filtered = students
+    .filter((s) => s.role !== 'admin')
+    .filter((s) => {
+      const q = query.toLowerCase();
+      const full = `${s.first_name} ${s.last_name}`.toLowerCase();
+      return full.includes(q) || s.email.toLowerCase().includes(q);
+    });
 
   const tabBtn = (t: 'members' | 'invitations'): React.CSSProperties => ({
     padding: '0.5rem 1.125rem',

@@ -28,6 +28,8 @@ export default function LoginPage() {
       const role: string = res.data.user?.role ?? '';
       if (role === 'student' || role === 'staff') {
         router.push('/learn');
+      } else if (role === 'admin' || role === 'teacher') {
+        router.push('/dashboard');
       } else {
         router.push('/dashboard');
       }
