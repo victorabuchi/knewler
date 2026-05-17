@@ -44,7 +44,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   }
 
   function isActive(href: string) {
-    if (href="/elearn";
+    if (href === '/elearn') return pathname === '/elearn';
     return pathname.startsWith(href);
   }
 
