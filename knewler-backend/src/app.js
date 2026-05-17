@@ -11,7 +11,8 @@ fastify.register(require('@fastify/cors'), {
       'http://localhost:3004',
       'https://knewler-frontend.onrender.com',
       'https://knewler.com',
-      'https://www.knewler.com'
+      'https://www.knewler.com',
+      'https://student.knewler.com'
     ]
     if (!origin || allowed.includes(origin)) {
       callback(null, true)
@@ -55,6 +56,7 @@ fastify.register(require('./routes/certificates'))
 fastify.register(require('./routes/settings'))
 fastify.register(require('./routes/invitations'))
 fastify.register(require('./routes/learn'))
+fastify.register(require('./routes/student'))
 
 
 // Start server

@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://knewler-backend.onrender.com',
   },
+  skipMiddlewareUrlNormalize: true,
 }
 
 export default nextConfig
