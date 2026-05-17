@@ -145,7 +145,7 @@ export default function CourseViewPage() {
 
   useEffect(() => {
     api
-      .get(`/api/learn/courses/${courseId}`)
+      .get(`/api/elearn/courses/${courseId}`)
       .then((r) => {
         const c: CourseDetail = r.data.course;
         setCourse(c);
@@ -165,7 +165,7 @@ export default function CourseViewPage() {
     if (!course || !activeModule || activeModule.completed || completing) return;
     setCompleting(true);
     try {
-      const res = await api.post(`/api/learn/courses/${courseId}/modules/${activeModule.id}/complete`);
+      const res = await api.post(`/api/elearn/courses/${courseId}/modules/${activeModule.id}/complete`);
       setCourse((prev) => {
         if (!prev) return prev;
         const modules = prev.modules.map((m, i) => i === activeIdx ? { ...m, completed: true } : m);
@@ -188,7 +188,7 @@ export default function CourseViewPage() {
     return (
       <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem' }}>
         <p style={{ color: '#DC2626', fontSize: '0.9375rem' }}>{error || 'Course not found.'}</p>
-        <Link href="/learn/courses" style={{ color: '#0369A1', fontSize: '0.875rem', textDecoration: 'none' }}>← Back to My Courses</Link>
+        <Link href="/elearn/courses" style={{ color: '#0369A1', fontSize: '0.875rem', textDecoration: 'none' }}>← Back to My Courses</Link>
       </div>
     );
   }
@@ -211,7 +211,7 @@ export default function CourseViewPage() {
         }}
       >
         <Link
-          href="/learn/courses"
+          href="/elearn/courses"
           style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748B', fontSize: '0.875rem', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

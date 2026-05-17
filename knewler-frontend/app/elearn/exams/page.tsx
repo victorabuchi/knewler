@@ -100,7 +100,7 @@ function ExamCard({ exam }: { exam: ExamItem }) {
       {/* Action */}
       {canStart && (
         <Link
-          href={`/learn/exams/${exam.id}`}
+          href={`/elearn/exams/${exam.id}`}
           style={{
             display: 'inline-block',
             padding: '0.5rem 1.25rem',
@@ -117,7 +117,7 @@ function ExamCard({ exam }: { exam: ExamItem }) {
       )}
       {status === 'submitted' && (
         <Link
-          href={`/learn/exams/${exam.id}`}
+          href={`/elearn/exams/${exam.id}`}
           style={{
             display: 'inline-block',
             padding: '0.5rem 1.25rem',
@@ -153,7 +153,7 @@ export default function LearnExamsPage() {
 
   useEffect(() => {
     api
-      .get('/api/learn/exams')
+      .get('/api/elearn/exams')
       .then((r) => setExams(r.data.exams))
       .catch(() => setError('Failed to load exams.'))
       .finally(() => setLoading(false));

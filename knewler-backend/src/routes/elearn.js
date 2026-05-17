@@ -2,7 +2,7 @@
 
 const db = require('../db/index')
 
-async function ensureLearnTables() {
+async function ensureElearnTables() {
   await db.query(`
     CREATE TABLE IF NOT EXISTS modules (
       id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -64,11 +64,11 @@ function shuffleArray(arr) {
   return a
 }
 
-module.exports = async function learnRoutes(fastify) {
-  await ensureLearnTables()
+module.exports = async function elearnRoutes(fastify) {
+  await ensureElearnTables()
 
-  // GET /api/learn/courses — courses the student is enrolled in with progress
-  fastify.get('/api/learn/courses', {
+  // GET /api/elearn/courses — courses the student is enrolled in with progress
+  fastify.get('/api/elearn/courses', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -94,8 +94,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ courses: result.rows })
   })
 
-  // GET /api/learn/schedule — upcoming sessions for the tenant (next 7 days)
-  fastify.get('/api/learn/schedule', {
+  // GET /api/elearn/schedule — upcoming sessions for the tenant (next 7 days)
+  fastify.get('/api/elearn/schedule', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { tenant_id } = request.user
@@ -123,8 +123,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ sessions: result.rows })
   })
 
-  // GET /api/learn/exams — all exams for enrolled courses with attempt status
-  fastify.get('/api/learn/exams', {
+  // GET /api/elearn/exams — all exams for enrolled courses with attempt status
+  fastify.get('/api/elearn/exams', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -157,8 +157,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ exams: result.rows })
   })
 
-  // GET /api/learn/exams/:id — exam detail with questions, creates attempt
-  fastify.get('/api/learn/exams/:id', {
+  // GET /api/elearn/exams/:id — exam detail with questions, creates attempt
+  fastify.get('/api/elearn/exams/:id', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -232,8 +232,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ exam, questions, attempt, answers })
   })
 
-  // GET /api/learn/courses/:id — course detail with modules for an enrolled student
-  fastify.get('/api/learn/courses/:id', {
+  // GET /api/elearn/courses/:id — course detail with modules for an enrolled student
+  fastify.get('/api/elearn/courses/:id', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -288,8 +288,8 @@ module.exports = async function learnRoutes(fastify) {
     })
   })
 
-  // POST /api/learn/courses/:id/progress — manual progress update
-  fastify.post('/api/learn/courses/:id/progress', {
+  // POST /api/elearn/courses/:id/progress — manual progress update
+  fastify.post('/api/elearn/courses/:id/progress', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -313,8 +313,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ progress: result.rows[0].progress })
   })
 
-  // POST /api/learn/courses/:id/modules/:moduleId/complete — mark a module as complete
-  fastify.post('/api/learn/courses/:id/modules/:moduleId/complete', {
+  // POST /api/elearn/courses/:id/modules/:moduleId/complete — mark a module as complete
+  fastify.post('/api/elearn/courses/:id/modules/:moduleId/complete', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user
@@ -363,8 +363,8 @@ module.exports = async function learnRoutes(fastify) {
     return reply.send({ progress })
   })
 
-  // POST /api/learn/exams/:id/submit — grade and finalise exam attempt
-  fastify.post('/api/learn/exams/:id/submit', {
+  // POST /api/elearn/exams/:id/submit — grade and finalise exam attempt
+  fastify.post('/api/elearn/exams/:id/submit', {
     onRequest: [fastify.authenticate]
   }, async (request, reply) => {
     const { id: user_id, tenant_id } = request.user

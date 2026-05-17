@@ -55,7 +55,7 @@ fastify.register(require('./routes/exams'))
 fastify.register(require('./routes/certificates'))
 fastify.register(require('./routes/settings'))
 fastify.register(require('./routes/invitations'))
-fastify.register(require('./routes/learn'))
+fastify.register(require('./routes/elearn'))
 fastify.register(require('./routes/student'))
 
 

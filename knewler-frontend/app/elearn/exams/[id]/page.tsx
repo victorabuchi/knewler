@@ -60,7 +60,7 @@ function ConfirmScreen({
 }) {
   return (
     <div style={{ maxWidth: '560px', margin: '0 auto', padding: '48px 24px' }}>
-      <Link href="/learn/exams" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#64748B', fontSize: '0.875rem', textDecoration: 'none', marginBottom: '2rem' }}>
+      <Link href="/elearn/exams" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#64748B', fontSize: '0.875rem', textDecoration: 'none', marginBottom: '2rem' }}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
         </svg>
@@ -356,7 +356,7 @@ export default function ExamTakingPage() {
   // Load exam
   useEffect(() => {
     api
-      .get(`/api/learn/exams/${examId}`)
+      .get(`/api/elearn/exams/${examId}`)
       .then((r) => {
         const { exam: e, questions: qs, attempt: a, answers: savedA } = r.data;
         setExam(e);
@@ -429,7 +429,7 @@ export default function ExamTakingPage() {
     setPhase('submitting');
     setSubmitError('');
     try {
-      const res = await api.post(`/api/learn/exams/${examId}/submit`, {
+      const res = await api.post(`/api/elearn/exams/${examId}/submit`, {
         answers,
         tab_switches: tabSwitchesRef.current,
       });
@@ -522,7 +522,7 @@ export default function ExamTakingPage() {
         })}
 
         <Link
-          href="/learn/exams"
+          href="/elearn/exams"
           style={{ display: 'inline-block', marginTop: '1rem', padding: '0.625rem 1.25rem', background: '#F1F5F9', color: '#0369A1', borderRadius: '6px', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}
         >
           ← Back to Exams
@@ -744,7 +744,7 @@ export default function ExamTakingPage() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', flexDirection: 'column', gap: '1rem' }}>
       <p style={{ color: '#DC2626', fontSize: '0.9375rem' }}>Failed to load exam.</p>
-      <Link href="/learn/exams" style={{ color: '#0369A1', fontSize: '0.875rem', textDecoration: 'none' }}>← Back to Exams</Link>
+      <Link href="/elearn/exams" style={{ color: '#0369A1', fontSize: '0.875rem', textDecoration: 'none' }}>← Back to Exams</Link>
     </div>
   );
 }

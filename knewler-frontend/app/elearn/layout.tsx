@@ -7,11 +7,11 @@ import { useAuth, getUserRole } from '@/lib/auth';
 import { useWindowWidth } from '@/lib/useWindowWidth';
 
 const NAV_LINKS = [
-  { label: 'My Courses', href: '/learn/courses' },
-  { label: 'Schedule', href: '/learn/schedule' },
-  { label: 'Exams', href: '/learn/exams' },
-  { label: 'Certificates', href: '/learn/certificates' },
-  { label: 'Profile', href: '/learn/profile' },
+  { label: 'My Courses', href: '/elearn/courses' },
+  { label: 'Schedule', href: '/elearn/schedule' },
+  { label: 'Exams', href: '/elearn/exams' },
+  { label: 'Certificates', href: '/elearn/certificates' },
+  { label: 'Profile', href: '/elearn/profile' },
 ];
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
@@ -44,7 +44,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   }
 
   function isActive(href: string) {
-    if (href === '/learn') return pathname === '/learn';
+    if (href="/elearn";
     return pathname.startsWith(href);
   }
 
@@ -62,7 +62,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   if (role === 'admin' || role === 'teacher') return null;
 
   // Course viewer has its own full-screen layout — skip the nav shell
-  if (pathname.startsWith('/learn/courses/')) {
+  if (pathname.startsWith('/elearn/courses/')) {
     return <>{children}</>;
   }
 
@@ -87,7 +87,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
       >
         {/* Wordmark */}
         <div style={{ display: 'flex', alignItems: 'center', marginRight: isMobile ? 0 : '40px', flexShrink: 0 }}>
-          <Link href="/learn" style={{ textDecoration: 'none' }}>
+          <Link href="/elearn" style={{ textDecoration: 'none' }}>
             <div style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
               <span style={{ color: '#1a1a2e' }}>knew</span>
               <span style={{ color: '#0EA5E9' }}>ler</span>

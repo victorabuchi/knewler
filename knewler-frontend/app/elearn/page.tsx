@@ -60,9 +60,9 @@ export default function LearnPage() {
   const firstName = userObj?.first_name ?? user?.name?.split(' ')[0] ?? 'there';
 
   useEffect(() => {
-    api.get('/api/learn/courses').then((r) => setCourses(r.data.courses)).catch(() => {}).finally(() => setLoadingCourses(false));
-    api.get('/api/learn/schedule').then((r) => setSessions(r.data.sessions)).catch(() => {}).finally(() => setLoadingSessions(false));
-    api.get('/api/learn/exams').then((r) => setExams(r.data.exams)).catch(() => {}).finally(() => setLoadingExams(false));
+    api.get('/api/elearn/courses').then((r) => setCourses(r.data.courses)).catch(() => {}).finally(() => setLoadingCourses(false));
+    api.get('/api/elearn/schedule').then((r) => setSessions(r.data.sessions)).catch(() => {}).finally(() => setLoadingSessions(false));
+    api.get('/api/elearn/exams').then((r) => setExams(r.data.exams)).catch(() => {}).finally(() => setLoadingExams(false));
   }, []);
 
   const sectionHeading: React.CSSProperties = {
@@ -100,7 +100,7 @@ export default function LearnPage() {
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.875rem' }}>
           <p style={{ ...sectionHeading, margin: 0 }}>My Courses</p>
-          <Link href="/learn/courses" style={{ fontSize: '0.8125rem', color: '#0369A1', textDecoration: 'none', fontWeight: 500 }}>
+          <Link href="/elearn/courses" style={{ fontSize: '0.8125rem', color: '#0369A1', textDecoration: 'none', fontWeight: 500 }}>
             View all
           </Link>
         </div>
@@ -124,7 +124,7 @@ export default function LearnPage() {
                   </div>
                   <p style={{ margin: '0 0 0.75rem', fontSize: '0.75rem', color: '#94A3B8' }}>{c.progress}% complete</p>
                   <Link
-                    href={`/learn/courses/${c.id}`}
+                    href={`/elearn/courses/${c.id}`}
                     style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0369A1', textDecoration: 'none' }}
                   >
                     Continue →

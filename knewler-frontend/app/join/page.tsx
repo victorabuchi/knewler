@@ -85,7 +85,7 @@ function JoinContent() {
       localStorage.setItem('knewler_role', res.data.user?.role ?? '');
       const role: string = res.data.user?.role ?? '';
       if (role === 'student' || role === 'staff') {
-        router.push('/learn');
+        router.push('/elearn');
       } else if (role === 'admin' || role === 'teacher') {
         router.push('/dashboard');
       } else {

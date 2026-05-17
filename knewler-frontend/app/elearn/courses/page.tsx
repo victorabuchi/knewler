@@ -39,7 +39,7 @@ export default function LearnCoursesPage() {
 
   useEffect(() => {
     api
-      .get('/api/learn/courses')
+      .get('/api/elearn/courses')
       .then((r) => setCourses(r.data.courses))
       .catch(() => setError('Failed to load your courses.'))
       .finally(() => setLoading(false));
@@ -113,7 +113,7 @@ export default function LearnCoursesPage() {
                 </p>
 
                 <Link
-                  href={`/learn/courses/${course.id}`}
+                  href={`/elearn/courses/${course.id}`}
                   style={{
                     display: 'inline-block',
                     padding: '0.5rem 1rem',
