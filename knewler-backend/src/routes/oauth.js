@@ -56,7 +56,7 @@ module.exports = async function oauthRoutes(fastify) {
       // Look up existing user by email
       const existing = await db.query(
         `SELECT users.id, users.email, users.role, users.tenant_id,
-                users.first_name, users.last_name
+                users.first_name, users.last_name, users.google_id
          FROM users
          JOIN tenants ON users.tenant_id = tenants.id
          WHERE users.email = $1 AND users.is_active = true
@@ -65,9 +65,16 @@ module.exports = async function oauthRoutes(fastify) {
       )
 
       if (intent === 'login') {
-        // Login intent: user must already exist
+        // Login intent: user must already exist (matched by email)
         if (!existing.rows[0]) {
           return reply.redirect(`${frontendUrl}/login?error=no_account`)
+        }
+        // Backfill google_id if the account was created manually
+        if (!existing.rows[0].google_id && profile.sub) {
+          await db.query(
+            'UPDATE users SET google_id = $1 WHERE id = $2',
+            [profile.sub, existing.rows[0].id]
+          )
         }
         return issueSessionAndRedirect({ fastify, reply, frontendUrl, user: existing.rows[0] })
       }

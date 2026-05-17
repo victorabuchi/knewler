@@ -117,19 +117,25 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => {
+              localStorage.removeItem('knewler_token')
+              localStorage.removeItem('knewler_user')
+              localStorage.removeItem('knewler_role')
+              localStorage.removeItem('knewler_tenant')
               localStorage.setItem('knewler_oauth_intent', 'login')
+              setLoading(true)
               window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://knewler-backend.onrender.com') + '/api/auth/google?intent=login'
             }}
+            disabled={loading}
             style={{
               width: '100%',
               padding: '0.75rem',
               background: '#ffffff',
-              color: '#374151',
+              color: loading ? '#94A3B8' : '#374151',
               border: '1px solid #E2E8F0',
               borderRadius: '8px',
               fontSize: '0.9375rem',
               fontWeight: 500,
-              cursor: 'pointer',
+              cursor: loading ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -143,7 +149,7 @@ export default function LoginPage() {
               <path fill="#FBBC05" d="M10.8 28.8A14.8 14.8 0 0 1 10 24c0-1.7.3-3.3.8-4.8v-6.2H2.6A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l8.2-6z"/>
               <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.9 2.4 30.5 0 24 0 14.7 0 6.5 5.4 2.6 13.2l8.2 6.2C12.7 13.6 17.9 9.5 24 9.5z"/>
             </svg>
-            Continue with Google
+            {loading ? 'Redirecting…' : 'Continue with Google'}
           </button>
 
           {/* Divider */}

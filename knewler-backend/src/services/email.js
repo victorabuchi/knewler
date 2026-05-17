@@ -3,7 +3,8 @@
 const { Resend } = require('resend')
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = process.env.FROM_EMAIL || 'Knewler <no-reply@knewler.com>'
+const FROM = process.env.FROM_EMAIL || 'Knewler <noreply@knewler.com>'
+const REPLY_TO = 'support@knewler.com'
 
 async function sendInvitationEmail({ to, first_name, institution_name, role, invite_url }) {
   const roleLabel = role === 'teacher' ? 'Teacher' : 'Student'
@@ -11,7 +12,12 @@ async function sendInvitationEmail({ to, first_name, institution_name, role, inv
   await resend.emails.send({
     from: FROM,
     to,
+    replyTo: REPLY_TO,
     subject: `You have been invited to join ${institution_name} on Knewler`,
+    headers: {
+      'List-Unsubscribe': `<mailto:${REPLY_TO}?subject=unsubscribe>`,
+    },
+    text: `You've been invited to join ${institution_name} on Knewler as a ${role === 'teacher' ? 'Teacher' : 'Student'}.\n\nAccept your invitation here:\n${invite_url}\n\nThis link expires in 7 days. If you weren't expecting this invitation, you can safely ignore this email.\n\n© ${new Date().getFullYear()} Knewler`,
     html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +97,12 @@ async function sendWelcomeEmail({ to, first_name, institution_name }) {
   await resend.emails.send({
     from: FROM,
     to,
+    replyTo: REPLY_TO,
     subject: `Welcome to Knewler — ${institution_name} is ready`,
+    headers: {
+      'List-Unsubscribe': `<mailto:${REPLY_TO}?subject=unsubscribe>`,
+    },
+    text: `Welcome${first_name ? `, ${first_name}` : ''}!\n\nYour Knewler environment for ${institution_name} is live. Start by adding courses, enrolling students, and scheduling sessions.\n\nGo to your dashboard:\n${process.env.FRONTEND_URL || 'https://knewler.com'}/dashboard\n\nNeed help? Email us at ${REPLY_TO}\n\n© ${new Date().getFullYear()} Knewler`,
     html: `
 <!DOCTYPE html>
 <html lang="en">
