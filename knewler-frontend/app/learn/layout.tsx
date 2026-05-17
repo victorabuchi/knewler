@@ -61,6 +61,11 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   const role = getUserRole();
   if (role === 'admin' || role === 'teacher') return null;
 
+  // Course viewer has its own full-screen layout — skip the nav shell
+  if (pathname.startsWith('/learn/courses/')) {
+    return <>{children}</>;
+  }
+
   const userObj = user as (typeof user & { first_name?: string });
   const firstName = userObj?.first_name ?? user.name?.split(' ')[0] ?? '';
 
