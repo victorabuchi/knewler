@@ -7,19 +7,19 @@ import { useAuth, getUserRole } from '@/lib/auth';
 import { useWindowWidth } from '@/lib/useWindowWidth';
 
 const STUDIES_LINKS = [
-  { label: 'My Enrollments', href: '/student/enrollments' },
-  { label: 'Study Guide', href: '/student/study-guide' },
-  { label: 'PSP', href: '/student/psp' },
-  { label: 'Credits', href: '/student/credits' },
-  { label: 'Curriculum', href: '/student/curriculum' },
+  { label: 'My Enrollments', href: '/enrollments' },
+  { label: 'Study Guide', href: '/study-guide' },
+  { label: 'PSP', href: '/psp' },
+  { label: 'Credits', href: '/credits' },
+  { label: 'Curriculum', href: '/curriculum' },
 ];
 
 const NAV_LINKS = [
-  { label: 'Home Page', href: '/student' },
-  { label: 'Calendar', href: '/student/calendar' },
-  { label: 'ATOMI', href: '/student/atomi' },
-  { label: 'Accessibility Statement', href: '/student/accessibility' },
-  { label: 'Course Feedback', href: '/student/feedback' },
+  { label: 'Home Page', href: '/' },
+  { label: 'Calendar', href: '/calendar' },
+  { label: 'ATOMI', href: '/atomi' },
+  { label: 'Accessibility Statement', href: '/accessibility' },
+  { label: 'Course Feedback', href: '/feedback' },
 ];
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
@@ -39,7 +39,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push('/login');
+      window.location.href = '/login';
       return;
     }
     if (!isLoading && user) {
@@ -63,12 +63,13 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
   function handleSignOut() {
     logout();
     localStorage.removeItem('knewler_tenant');
-    router.push('/login');
+    window.location.href = '/login';
   }
 
   function isActive(href: string) {
-    if (href === '/student') return pathname === '/student';
-    return pathname.startsWith(href);
+    if (href === '/') return pathname === '/' || pathname === '/student';
+    return pathname === href || pathname.startsWith(href + '/') ||
+      pathname === `/student${href}` || pathname.startsWith(`/student${href}/`);
   }
 
   if (isLoading) {
@@ -133,7 +134,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             </svg>
           </div>
           {!isMobile && (
-            <Link href="/student" style={{ textDecoration: 'none' }}>
+            <Link href="/" style={{ textDecoration: 'none' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', whiteSpace: 'nowrap' }}>
                 {institutionName}
               </span>
@@ -146,16 +147,16 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           <nav style={{ flex: 1, display: 'flex', alignItems: 'stretch', height: '100%', gap: '4px' }}>
             {/* Home */}
             <Link
-              href="/student"
+              href="/"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 padding: '0 12px',
                 fontSize: '13px',
                 fontWeight: 500,
-                color: isActive('/student') ? '#0E7490' : '#374151',
+                color: isActive('/') ? '#0E7490' : '#374151',
                 textDecoration: 'none',
-                borderBottom: isActive('/student') ? '2px solid #0E7490' : '2px solid transparent',
+                borderBottom: isActive('/') ? '2px solid #0E7490' : '2px solid transparent',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -321,16 +322,16 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           }}
         >
           <Link
-            href="/student"
+            href="/"
             style={{
               display: 'block',
               padding: '13px 20px',
               fontSize: '14px',
-              fontWeight: isActive('/student') ? 600 : 500,
-              color: isActive('/student') ? '#0E7490' : '#374151',
+              fontWeight: isActive('/') ? 600 : 500,
+              color: isActive('/') ? '#0E7490' : '#374151',
               textDecoration: 'none',
-              borderLeft: isActive('/student') ? '3px solid #0E7490' : '3px solid transparent',
-              background: isActive('/student') ? '#F0FDFA' : 'transparent',
+              borderLeft: isActive('/') ? '3px solid #0E7490' : '3px solid transparent',
+              background: isActive('/') ? '#F0FDFA' : 'transparent',
             }}
           >
             Home Page

@@ -20,7 +20,7 @@ const FEATURE_CARDS = [
   {
     label: 'PSP',
     description: 'Personal Study Plan',
-    href: '/student/psp',
+    href: '/psp',
     bg: '#1D4ED8',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -34,7 +34,7 @@ const FEATURE_CARDS = [
   {
     label: 'Course Feedback',
     description: 'Rate your courses',
-    href: '/student/feedback',
+    href: '/feedback',
     bg: '#BE123C',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -45,7 +45,7 @@ const FEATURE_CARDS = [
   {
     label: 'Credits',
     description: 'View earned credits',
-    href: '/student/credits',
+    href: '/credits',
     bg: '#15803D',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -57,7 +57,7 @@ const FEATURE_CARDS = [
   {
     label: 'Study Guide',
     description: 'Degree requirements',
-    href: '/student/study-guide',
+    href: '/study-guide',
     bg: '#B45309',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -69,7 +69,7 @@ const FEATURE_CARDS = [
   {
     label: 'Lukkarikone',
     description: 'Timetable generator',
-    href: '/student/lukkarikone',
+    href: '/lukkarikone',
     bg: '#7C3AED',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -84,7 +84,7 @@ const FEATURE_CARDS = [
   {
     label: 'Messages',
     description: 'Inbox & announcements',
-    href: '/student/messages',
+    href: '/messages',
     bg: '#0E7490',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -96,10 +96,10 @@ const FEATURE_CARDS = [
 ];
 
 const QUICK_LINKS = [
-  { label: 'Library', href: '/student/library' },
-  { label: 'IT Services', href: '/student/it' },
-  { label: 'Student Affairs', href: '/student/affairs' },
-  { label: 'Health Services', href: '/student/health' },
+  { label: 'Library', href: '/library' },
+  { label: 'IT Services', href: '/it' },
+  { label: 'Student Affairs', href: '/affairs' },
+  { label: 'Health Services', href: '/health' },
 ];
 
 function timeAgo(dateStr: string): string {
@@ -121,7 +121,7 @@ export default function StudentHomePage() {
   const [messagesLoading, setMessagesLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/api/student/messages')
+    api.get('/api/messages')
       .then((res) => setMessages(res.data.messages ?? []))
       .catch(() => setMessages([]))
       .finally(() => setMessagesLoading(false));
@@ -171,7 +171,7 @@ export default function StudentHomePage() {
 
         {unreadCount > 0 && (
           <Link
-            href="/student/messages"
+            href="/messages"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -371,7 +371,7 @@ export default function StudentHomePage() {
             )}
             {messages.length > 0 && (
               <Link
-                href="/student/messages"
+                href="/messages"
                 style={{
                   display: 'block',
                   padding: '10px 16px',
