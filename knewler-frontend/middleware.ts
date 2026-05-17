@@ -29,11 +29,9 @@ function rewriteTo(request: NextRequest, base: string, pathname: string): NextRe
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') ?? ''
   const pathname = request.nextUrl.pathname
-
-  // Strip port for matching (handles localhost:3004, subdomains on non-standard ports)
   const host = hostname.split(':')[0]
 
-  // Always pass through auth/asset paths
+  // Always pass through auth/asset paths on every domain
   if (isAuthPath(pathname)) {
     return NextResponse.next()
   }
@@ -41,12 +39,6 @@ export function middleware(request: NextRequest) {
   // Local development — pass through
   if (host === 'localhost' || host === '127.0.0.1') {
     return NextResponse.next()
-  }
-
-  // knewler.com / www.knewler.com → /marketing
-  if (host === 'knewler.com' || host === 'www.knewler.com') {
-    if (pathname.startsWith('/marketing')) return NextResponse.next()
-    return rewriteTo(request, '/marketing', pathname)
   }
 
   // app.knewler.com → /dashboard
@@ -79,6 +71,7 @@ export function middleware(request: NextRequest) {
     return rewriteTo(request, '/calendar', pathname)
   }
 
+  // knewler.com, www.knewler.com, and everything else — serve normally
   return NextResponse.next()
 }
 
