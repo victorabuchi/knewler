@@ -1,6 +1,6 @@
 # Knewler
 
-A study app for exam preparation, built with React. (Formerly called Scribletics.) Pick a subject on the dashboard, open a week, then learn it, practise it with spaced repetition, and test yourself with a mock exam. Progress is stored in your browser (localStorage).
+A study app for exam preparation, built with React. Pick a subject on the dashboard, open a week, then learn it, practise it with spaced repetition, and test yourself with a mock exam. Progress is stored in your browser (localStorage).
 
 Course content is summarised from lectures for the *Web Programming I* course.
 
