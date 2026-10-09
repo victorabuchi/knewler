@@ -1,11 +1,11 @@
 // A tiny local server that compiles and runs Java for the exercises: `npm run java`.
-// It listens on this computer only (127.0.0.1) and answers only the Knewler site and localhost pages.
+// It listens on this computer only (127.0.0.1) and answers only the Knewler site (GitHub Pages and knewler.com) and localhost pages.
 // It runs the code with your JDK without a sandbox, so use it for your own code only.
 import { createServer } from 'node:http'
 import { javaAvailable, runJava } from './runner-core.mjs'
 
 const PORT = Number(process.env.PORT ?? 8787)
-const ALLOWED = [/^https:\/\/victorabuchi\.github\.io$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/]
+const ALLOWED = [/^https:\/\/victorabuchi\.github\.io$/, /^https:\/\/(www\.)?knewler\.com$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/]
 
 const server = createServer(async (req, res) => {
   const origin = req.headers.origin ?? ''

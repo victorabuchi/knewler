@@ -1,0 +1,10 @@
+# Render Blueprint: a static site built with Vite. The app uses hash routes (#/...), so no rewrite rules are needed.
+services:
+  - type: web
+    runtime: static
+    name: knewler
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    domains:
+      - knewler.com
+      - www.knewler.com
