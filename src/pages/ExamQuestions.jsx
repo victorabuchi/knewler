@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Navigate } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
+import LearnMore from '../components/LearnMore.jsx'
 import { TOPICS } from '../data/content'
 import { useScope } from '../useScope'
 
@@ -49,6 +50,7 @@ function Question({ item, revealed, onToggle }) {
           {revealed ? 'Hide answer' : 'Show answer'}
         </Button>
         {revealed && item.kind === 'mcq' && item.why && <p className="exam-answer mt-3 mb-0"><strong>Why:</strong> {item.why}</p>}
+        {revealed && <LearnMore item={item} />}
         {revealed && item.kind === 'explain' && (
           <div className="exam-answer mt-3">
             <p><strong>Model answer:</strong> {item.model}</p>
