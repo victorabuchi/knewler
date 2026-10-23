@@ -72,3 +72,25 @@ describe('Web Programming I: the real exam of 23.10.2026', () => {
     expect(main.queryByRole('link', { name: /Practice/ })).not.toBeInTheDocument()
   })
 })
+
+describe('Web Programming I cards count the practice questions (the real exam)', () => {
+  it('shows each week\'s number of exam questions on its card', () => {
+    renderApp('/s/webprog')
+    const card = (n) => screen.getAllByRole('link').find((l) => within(l).queryByText(`Week ${n}`))
+    expect(card(1)).toHaveTextContent('2 questions')
+    expect(card(2)).toHaveTextContent('6 questions')
+    expect(card(3)).toHaveTextContent('0 questions')
+    expect(card(4)).toHaveTextContent('9 questions')
+    expect(card(5)).toHaveTextContent('8 questions')
+    expect(card(1)).toHaveTextContent('0 of 2 answered correctly')
+  })
+
+  it('counts 25 on the dashboard and on the Progress page', () => {
+    const { unmount } = renderApp('/')
+    const course = screen.getAllByRole('link').find((l) => /Web Programming I/.test(l.textContent) && /answered correctly/.test(l.textContent))
+    expect(course).toHaveTextContent('0 of 25 answered correctly')
+    unmount()
+    renderApp('/s/webprog/progress')
+    expect(screen.getByText('questions mastered').previousSibling).toHaveTextContent(/^0\/25$/)
+  })
+})
