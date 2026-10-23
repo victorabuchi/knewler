@@ -30,20 +30,19 @@ describe('study content', () => {
   it('gives week 6 of Web Programming I its lecture and assignment material', () => {
     const week = (list) => list.filter((i) => i.subject === 'webprog' && i.week === 6)
     expect(week(LEARN).length).toBeGreaterThan(10)
-    expect(week(ITEMS).length).toBeGreaterThan(5) // only the related practice questions are offered
   })
 })
 
 describe('Web Programming I practice set', () => {
   const web = ITEMS.filter((i) => i.subject === 'webprog')
-  it('is small: the 26 Moodle questions, the 25 real exam questions, the code exercises and a few related questions', () => {
+  it('is small: the 26 Moodle questions (Exam practice), the 25 real exam questions (Practice) and the code exercises', () => {
     expect(web.filter((i) => i.examNo)).toHaveLength(26)
     expect(web.filter((i) => i.realNo)).toHaveLength(25)
-    expect(web.length).toBeLessThan(130)
-    expect(web.filter((i) => !i.examNo && !i.realNo && i.kind !== 'code').every((i) => i.kind === 'mcq')).toBe(true)
+    expect(web.length).toBe(26 + 25 + 13)
   })
-  it('has practice questions in every week', () => {
-    for (const week of [1, 2, 3, 4, 5, 6]) expect(web.filter((i) => i.week === week && i.kind !== 'code').length).toBeGreaterThan(5)
+  it('uses the real exam as Practice: its questions are spread over weeks 1, 2, 4 and 5', () => {
+    const weeks = [...new Set(web.filter((i) => i.realNo).map((i) => i.week))].sort()
+    expect(weeks).toEqual([1, 2, 4, 5])
   })
 })
 

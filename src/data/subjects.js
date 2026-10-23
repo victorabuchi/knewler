@@ -21,11 +21,12 @@ export const SUBJECTS = [
   {
     id: 'webprog',
     color: '#3178C6',
+    practiceKey: 'realNo', // Practice (each week and all weeks) asks the questions of the real exam of 23.10.2026
     mock: false, // no random mock exam: Practice (the exam-style questions of each week) and Exam practice (all 26 Moodle questions) cover it
     title: 'Web Programming I',
     org: 'School of Computing',
     examDate: '2026-10-23',
-    tools: [{ path: 'all/exam', label: 'Exam practice' }, { path: 'all/questions', label: 'All exam questions' }, { path: 'all/real-questions', label: 'Exam 23.10.2026' }, { path: 'glossary', label: 'Glossary' }],
+    tools: [{ path: 'all/exam', label: 'Exam practice' }, { path: 'all/real-questions', label: 'Exam 23.10.2026' }, { path: 'glossary', label: 'Glossary' }],
     logos: [logo(html5, 'HTML'), logo(css, 'CSS'), logo(javascript, 'JavaScript'), logo(react, 'React')],
     weeks: [
       { n: 1, color: '#E34F26', title: 'Intro to the web, HTML, CSS', logos: [logo(html5, 'HTML'), logo(css, 'CSS')] },

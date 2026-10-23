@@ -57,11 +57,18 @@ describe('Web Programming I: the real exam of 23.10.2026', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Multiple choice: 20 of 20 correct.')
   }, 60000)
 
-  it('is part of Practice: the exam questions appear in their weeks', () => {
+  it('is the Practice of each week (and nothing else is)', () => {
     const inWeek = (n) => scopedItems('webprog', n).filter((i) => i.realNo).map((i) => i.realNo)
     expect(inWeek(2)).toEqual([12, 13, 14, 15, 16, 17]) // the Git questions
     renderApp('/s/webprog/2/practice')
-    const total = scopedItems('webprog', 2).filter((i) => i.kind !== 'code').length
+    const total = inWeek(2).length
     expect(screen.getByText(new RegExp(`\\(${total} now\\)`))).toBeInTheDocument()
+  })
+
+  it('weeks without exam questions have no Practice tile', () => {
+    renderApp('/s/webprog/3')
+    const main = within(screen.getByRole('main'))
+    expect(main.getByRole('link', { name: /Learn/ })).toBeInTheDocument()
+    expect(main.queryByRole('link', { name: /Practice/ })).not.toBeInTheDocument()
   })
 })

@@ -6,7 +6,6 @@ import { docs as webprogDocs } from './webprog/docs.js'
 import * as examPractice from './webprog/examPractice.js'
 import * as realExam from './webprog/realExam.js'
 import * as prog2 from './prog2/index.js'
-import { RELATED_IDS } from './webprog/practiceSet.js'
 import { getSubject } from './subjects'
 
 // One data file per subject, each { topics, learn, questions }. Topic keys must be unique across subjects.
@@ -14,8 +13,9 @@ const SOURCES = [webprog, jsSyntax, examPractice, realExam, webprogWeek6, bmc, p
 
 export const TOPICS = Object.assign({}, ...SOURCES.map((s) => s.topics))
 export const LEARN = SOURCES.flatMap((s) => s.learn)
-// Web Programming I offers the Moodle exam-practice questions, the real exam of 23.10.2026, the code exercises and the related questions in practiceSet.js.
-const offered = (q) => q.subject !== 'webprog' || q.examNo || q.realNo || q.kind === 'code' || RELATED_IDS.has(q.id)
+// Web Programming I offers the real exam of 23.10.2026 (its Practice), the Moodle exam-practice questions (the Exam practice quiz)
+// and the code exercises. The older question bank stays in the data files but is not offered.
+const offered = (q) => q.subject !== 'webprog' || q.examNo || q.realNo || q.kind === 'code'
 export const ITEMS = SOURCES.flatMap((s) => s.questions).filter(offered)
 export const VARIANTS = SOURCES.flatMap((s) => s.variants ?? []) // practice variants of the exercise tasks
 export const DOCS = [...SOURCES.flatMap((s) => s.docs ?? []), ...webprogDocs] // course PDFs, shown as they are
@@ -48,11 +48,8 @@ export const EXAM_SETS = {
   practice: {
     key: 'examNo',
     title: 'Exam practice',
-    listTitle: 'All exam questions',
     quizPath: 'exam',
-    listPath: 'questions',
     intro: 'The official practice questions from Moodle, in the same order. They are made to get you familiar with the format and question types, not to represent the real exam questions, and they may be shorter and simpler. Multiple-choice questions are checked for you; the open code-explanation questions are for your own practice and self-reflection: compare your answer with the model answer and tick the points you covered.',
-    listIntro: 'The Moodle exam practice, all {n} questions in the Moodle order. Read them like the quiz, then show the answer. To be tested with feedback, use Exam practice.',
   },
   real: {
     key: 'realNo',

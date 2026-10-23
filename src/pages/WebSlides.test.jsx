@@ -33,48 +33,13 @@ describe('Web Programming I: slides in Learn', () => {
   })
 })
 
-describe('Web Programming I: all exam questions', () => {
-  it('is in the top bar', () => {
+describe('Web Programming I: no separate list of the Moodle practice questions', () => {
+  it('has no "All exam questions" in the top bar; the Exam practice quiz stays', () => {
     renderApp('/s/webprog')
-    expect(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'All exam questions' })).toBeInTheDocument()
-  })
-
-  it('shows all 26 questions in the Moodle order, with the answers hidden', () => {
-    renderApp('/s/webprog/all/questions')
-    const titles = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)
-    expect(titles).toEqual(exam.map((q) => `Question ${q.examNo}`))
-    expect(screen.queryByText('(correct answer)')).not.toBeInTheDocument()
-    expect(screen.getAllByText('Not answered')).toHaveLength(26)
-  })
-
-  it('does not list the correct option first, and shows it on request', async () => {
-    const user = userEvent.setup()
-    renderApp('/s/webprog/all/questions')
-    const q = exam.find((x) => x.examNo === 13)
-    const article = document.getElementById('q-13')
-    expect(within(article).getByText(q.q)).toBeInTheDocument()
-    expect(within(article).getAllByRole('listitem')).toHaveLength(q.options.length)
-    await user.click(within(article).getByRole('button', { name: 'Show answer' }))
-    expect(within(article).getByText('(correct answer)').parentElement).toHaveTextContent('textContent')
-    expect(within(article).getByText(/sets the text of an element/)).toBeInTheDocument()
-    await user.click(within(article).getByRole('button', { name: 'Hide answer' }))
-    expect(within(article).queryByText('(correct answer)')).not.toBeInTheDocument()
-  })
-
-  it('shows the code and the model answer of a "based on the given code" question', async () => {
-    const user = userEvent.setup()
-    renderApp('/s/webprog/all/questions')
-    const article = document.getElementById('q-10')
-    expect(within(article).getByText(/numbers.filter/, { exact: false })).toBeInTheDocument()
-    await user.click(within(article).getByRole('button', { name: 'Show answer' }))
-    expect(within(article).getByText(/Model answer:/)).toBeInTheDocument()
-  })
-
-  it('shows every answer with the switch', async () => {
-    const user = userEvent.setup()
-    renderApp('/s/webprog/all/questions')
-    await user.click(screen.getByLabelText('Show all answers'))
-    expect(screen.getAllByRole('button', { name: 'Hide answer' })).toHaveLength(26)
+    const nav = within(screen.getByRole('navigation', { name: 'Main' }))
+    expect(nav.queryByRole('link', { name: 'All exam questions' })).not.toBeInTheDocument()
+    expect(nav.getByRole('link', { name: 'Exam practice' })).toBeInTheDocument()
+    expect(nav.getByRole('link', { name: 'Exam 23.10.2026' })).toBeInTheDocument()
   })
 })
 

@@ -66,7 +66,7 @@ function Question({ item, no, revealed, onToggle }) {
 
 // Every question of a fixed set (the Moodle "Exam practice", or the real exam) on one page, in its order, like reading the quiz:
 // question text, code and options. The answers stay hidden until you show them (one by one, or all at once). `set` is a key of EXAM_SETS.
-function ExamQuestions({ set = 'practice' }) {
+function ExamQuestions({ set = 'real' }) {
   const examSet = EXAM_SETS[set]
   const no = (q) => q[examSet.key]
   const { subjectId, week, valid, items, label } = useScope()
