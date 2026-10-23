@@ -8,7 +8,7 @@ import Automaton from '../components/Automaton.jsx'
 import AutomatonPlayer from '../components/AutomatonPlayer.jsx'
 import QuestionCard from '../components/QuestionCard.jsx'
 import TopicPicker from '../components/TopicPicker.jsx'
-import { topicsIn } from '../data/content'
+import { EXAM_SETS, topicsIn } from '../data/content'
 import { useProgress } from '../hooks/useProgress'
 import { shuffle } from '../storage'
 import { isFinished, sessionReducer } from '../reducers/session'
@@ -18,11 +18,13 @@ const MOCK_MCQ = 20
 const MOCK_EXPLAIN = 3
 const EXPLAIN_POINTS = 3
 
-// exam=false: a random mock exam. exam=true: the course's own "Exam practice" questions, all of them, in their fixed order.
-function Mock({ exam = false }) {
+// exam=false: a random mock exam. exam=true: a fixed set of questions in their own order: `set` is a key of EXAM_SETS
+// ("practice" = the Moodle Exam practice, "real" = the real exam).
+function Mock({ exam = false, set = 'practice' }) {
+  const examSet = EXAM_SETS[set]
   const { subjectId, week, valid, items: allItems, label } = useScope()
   const items = exam
-    ? allItems.filter((i) => i.examNo).sort((a, b) => a.examNo - b.examNo)
+    ? allItems.filter((i) => i[examSet.key]).sort((a, b) => a[examSet.key] - b[examSet.key])
     : allItems.filter((i) => i.kind !== 'code') // the exam has no coding questions
   const examTopics = topicsIn(items.filter((d) => d.kind === 'mcq' || d.kind === 'explain'))
   const [selected, setSelected] = useState(examTopics)
@@ -40,7 +42,7 @@ function Mock({ exam = false }) {
   }, [finished]) // eslint-disable-line -- runs once per finished exam
   if (!valid) return <Navigate to="/" replace />
 
-  const crumbs = <Crumbs subjectId={subjectId} week={week} current={exam ? 'Exam practice' : 'Mock exam'} />
+  const crumbs = <Crumbs subjectId={subjectId} week={week} current={exam ? examSet.title : 'Mock exam'} />
 
   const startFixed = () => {
     dispatch({ type: 'start', items })
@@ -64,8 +66,8 @@ function Mock({ exam = false }) {
     return (
       <>
         {crumbs}
-        <h1 className="h3">Exam practice</h1>
-        <p>The official practice questions from Moodle, in the same order. They are made to get you familiar with the format and question types, not to represent the real exam questions, and they may be shorter and simpler. Multiple-choice questions are checked for you; the open code-explanation questions are for your own practice and self-reflection: compare your answer with the model answer and tick the points you covered.</p>
+        <h1 className="h3">{examSet.title}</h1>
+        <p>{examSet.intro.replace('{n}', items.length)}</p>
         <p className="text-body-secondary small">{items.length} questions so far. No feedback until the end. You can go back and change answers.</p>
         <Button onClick={startFixed} disabled={!items.length}>Attempt quiz</Button>
       </>
@@ -129,7 +131,7 @@ function Mock({ exam = false }) {
   return (
     <>
       {crumbs}
-      <h1 className="h3">{exam ? 'Exam practice results' : 'Mock exam results'}</h1>
+      <h1 className="h3">{exam ? `${examSet.title} results` : 'Mock exam results'}</h1>
       {exam ? (
         <Alert variant="info" role="status">
           <strong>Multiple choice: {mcqPts} of {mcqs.length} correct.</strong>

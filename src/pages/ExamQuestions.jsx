@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
 import LearnMore from '../components/LearnMore.jsx'
-import { TOPICS } from '../data/content'
+import { EXAM_SETS, TOPICS } from '../data/content'
 import { useScope } from '../useScope'
 
 // A fixed, repeatable shuffle (the data lists the correct option first, so showing it as written would give the answer away).
@@ -19,13 +19,14 @@ function stableOrder(options, seed) {
   return out
 }
 
-function Question({ item, revealed, onToggle }) {
-  const options = item.kind === 'mcq' ? stableOrder(item.options, item.id) : []
+function Question({ item, no, revealed, onToggle }) {
+  // the options in the order the exam showed them, or a fixed shuffle (the data lists the correct one first)
+  const options = item.kind === 'mcq' ? item.display ?? stableOrder(item.options, item.id) : []
   const correct = item.kind === 'mcq' ? item.options[0] : null
   return (
-    <Row as="article" id={`q-${item.examNo}`} aria-labelledby={`q-title-${item.examNo}`} className="exam-question g-0 mb-4">
+    <Row as="article" id={`q-${no}`} aria-labelledby={`q-title-${no}`} className="exam-question g-0 mb-4">
       <Col md={2} className="exam-info">
-        <h2 id={`q-title-${item.examNo}`} className="h6 mb-1">Question <span className="fs-4 fw-bold">{item.examNo}</span></h2>
+        <h2 id={`q-title-${no}`} className="h6 mb-1">Question <span className="fs-4 fw-bold">{no}</span></h2>
         <div className="small">{revealed ? 'Answer shown' : 'Not answered'}</div>
         <div className="small">Marked out of 1.00</div>
         <div className="small mt-2">Week {item.week}: {TOPICS[item.topic] ?? item.topic}</div>
@@ -63,14 +64,16 @@ function Question({ item, revealed, onToggle }) {
   )
 }
 
-// Every Moodle "Exam practice" question on one page, in the Moodle order, like reading the quiz: question text, code and options.
-// The answers stay hidden until you show them (one by one, or all at once).
-function ExamQuestions() {
+// Every question of a fixed set (the Moodle "Exam practice", or the real exam) on one page, in its order, like reading the quiz:
+// question text, code and options. The answers stay hidden until you show them (one by one, or all at once). `set` is a key of EXAM_SETS.
+function ExamQuestions({ set = 'practice' }) {
+  const examSet = EXAM_SETS[set]
+  const no = (q) => q[examSet.key]
   const { subjectId, week, valid, items, label } = useScope()
   const [shown, setShown] = useState(() => new Set())
   if (!valid) return <Navigate to="/" replace />
 
-  const list = items.filter((i) => i.examNo).sort((a, b) => a.examNo - b.examNo)
+  const list = items.filter((i) => no(i)).sort((a, b) => no(a) - no(b))
   const all = shown.size === list.length && list.length > 0
   const toggle = (n) => setShown((s) => {
     const next = new Set(s)
@@ -82,25 +85,26 @@ function ExamQuestions() {
 
   return (
     <>
-      <Crumbs subjectId={subjectId} week={week} current="All exam questions" />
-      <h1 className="h3">All exam questions <small className="text-body-secondary fs-6">{label}</small></h1>
-      <p className="text-body-secondary">The Moodle exam practice, all {list.length} questions in the Moodle order. Read them like the quiz, then show the answer. To be tested with feedback, use Exam practice.</p>
+      <Crumbs subjectId={subjectId} week={week} current={examSet.listTitle} />
+      <h1 className="h3">{examSet.listTitle} <small className="text-body-secondary fs-6">{label}</small></h1>
+      <p className="text-body-secondary">{examSet.listIntro.replace('{n}', list.length)}</p>
+      {list.length > 0 && <Link to={`/s/${subjectId}/${week}/${examSet.quizPath}`} className="btn btn-primary mb-3">Take it as a quiz</Link>}
       {!list.length && <p className="text-body-secondary">No exam practice questions here.</p>}
       {list.length > 0 && (
         <>
           <nav aria-label="Question navigation" className="exam-nav mb-4">
             <div className="d-flex flex-wrap gap-2 mb-2">
-              {list.map((q) => <Button key={q.id} size="sm" variant={shown.has(q.examNo) ? 'success' : 'secondary'} aria-label={`Question ${q.examNo}`} onClick={() => go(q.examNo)}>{q.examNo}</Button>)}
+              {list.map((q) => <Button key={q.id} size="sm" variant={shown.has(no(q)) ? 'success' : 'secondary'} aria-label={`Question ${no(q)}`} onClick={() => go(no(q))}>{no(q)}</Button>)}
             </div>
             <Form.Check
               type="switch"
               id="show-all"
               label="Show all answers"
               checked={all}
-              onChange={(e) => setShown(e.target.checked ? new Set(list.map((q) => q.examNo)) : new Set())}
+              onChange={(e) => setShown(e.target.checked ? new Set(list.map(no)) : new Set())}
             />
           </nav>
-          {list.map((q) => <Question key={q.id} item={q} revealed={shown.has(q.examNo)} onToggle={() => toggle(q.examNo)} />)}
+          {list.map((q) => <Question key={q.id} item={q} no={no(q)} revealed={shown.has(no(q))} onToggle={() => toggle(no(q))} />)}
         </>
       )}
     </>

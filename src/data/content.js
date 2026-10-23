@@ -4,17 +4,18 @@ import * as webprogWeek6 from './webprog/week6.js'
 import * as jsSyntax from './webprog/jsSyntax.js'
 import { docs as webprogDocs } from './webprog/docs.js'
 import * as examPractice from './webprog/examPractice.js'
+import * as realExam from './webprog/realExam.js'
 import * as prog2 from './prog2/index.js'
 import { RELATED_IDS } from './webprog/practiceSet.js'
 import { getSubject } from './subjects'
 
 // One data file per subject, each { topics, learn, questions }. Topic keys must be unique across subjects.
-const SOURCES = [webprog, jsSyntax, examPractice, webprogWeek6, bmc, prog2]
+const SOURCES = [webprog, jsSyntax, examPractice, realExam, webprogWeek6, bmc, prog2]
 
 export const TOPICS = Object.assign({}, ...SOURCES.map((s) => s.topics))
 export const LEARN = SOURCES.flatMap((s) => s.learn)
-// Web Programming I offers the Moodle exam-practice questions, the code exercises and the related questions in practiceSet.js, nothing else.
-const offered = (q) => q.subject !== 'webprog' || q.examNo || q.kind === 'code' || RELATED_IDS.has(q.id)
+// Web Programming I offers the Moodle exam-practice questions, the real exam of 23.10.2026, the code exercises and the related questions in practiceSet.js.
+const offered = (q) => q.subject !== 'webprog' || q.examNo || q.realNo || q.kind === 'code' || RELATED_IDS.has(q.id)
 export const ITEMS = SOURCES.flatMap((s) => s.questions).filter(offered)
 export const VARIANTS = SOURCES.flatMap((s) => s.variants ?? []) // practice variants of the exercise tasks
 export const DOCS = [...SOURCES.flatMap((s) => s.docs ?? []), ...webprogDocs] // course PDFs, shown as they are
@@ -41,3 +42,25 @@ export const scopedDocs = (subjectId, week) => DOCS.filter((d) => inScope(d, sub
 export const scopedLearn = (subjectId, week) => LEARN.filter((c) => inScope(c, subjectId, week))
 
 export const topicsIn = (items) => Object.keys(TOPICS).filter((k) => items.some((i) => i.topic === k))
+
+// The fixed question sets shown in Moodle order: the Moodle "Exam practice" and the real exam. `key` is the question-number field of the set.
+export const EXAM_SETS = {
+  practice: {
+    key: 'examNo',
+    title: 'Exam practice',
+    listTitle: 'All exam questions',
+    quizPath: 'exam',
+    listPath: 'questions',
+    intro: 'The official practice questions from Moodle, in the same order. They are made to get you familiar with the format and question types, not to represent the real exam questions, and they may be shorter and simpler. Multiple-choice questions are checked for you; the open code-explanation questions are for your own practice and self-reflection: compare your answer with the model answer and tick the points you covered.',
+    listIntro: 'The Moodle exam practice, all {n} questions in the Moodle order. Read them like the quiz, then show the answer. To be tested with feedback, use Exam practice.',
+  },
+  real: {
+    key: 'realNo',
+    title: 'Exam 23.10.2026',
+    listTitle: 'Exam 23.10.2026',
+    quizPath: 'real-exam',
+    listPath: 'real-questions',
+    intro: 'The real Web Programming I exam of 23.10.2026, all {n} questions in the exam order. Answer them like in the exam: no feedback until the end. Multiple-choice questions are checked for you; for the open questions, compare your answer with the model answer and tick the points you covered.',
+    listIntro: 'The real exam of 23.10.2026, all {n} questions in the exam order, with the options in the same order as in Moodle. Read them, then show the answer.',
+  },
+}
