@@ -36,6 +36,15 @@ describe('Basic Models of Computation: Learn (PDFs) and Exercises only', () => {
     expect(main.getByText(/Exercises \(all weeks\)/)).toBeInTheDocument()
   })
 
+  it('opens Past questions from the BMC navigation', async () => {
+    const user = userEvent.setup()
+    renderApp('/s/bmc')
+    expect(screen.getByRole('link', { name: 'Past questions' })).toHaveAttribute('href', '/s/bmc/all/exam')
+    await user.click(screen.getByRole('link', { name: 'Past questions' }))
+    expect(await screen.findByRole('heading', { name: /Past questions/ })).toBeInTheDocument()
+    expect(screen.getAllByRole('heading', { name: /Final exam 2024/ })).toHaveLength(4)
+  })
+
   it('has the tasks of exercises 1, 2 and 3, each pointing to a page of its answer PDF', () => {
     expect(exercise1.map((q) => q.page)).toEqual([1, 3, 4, 5, 6, 7, 8, 9])
     expect(exercise2.map((q) => q.page)).toEqual([1, 2, 3, 4, 5, 6])
