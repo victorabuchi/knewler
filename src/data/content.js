@@ -17,7 +17,7 @@ export const LEARN = SOURCES.flatMap((s) => s.learn)
 // and the code exercises. The older question bank stays in the data files but is not offered.
 const offered = (q) => q.subject !== 'webprog' || q.examNo || q.realNo || q.kind === 'code'
 export const ITEMS = SOURCES.flatMap((s) => s.questions).filter(offered)
-export const PAST_EXAMS = SOURCES.flatMap((s) => s.pastExams ?? []) // past exam questions (shown on their own page, not in the totals)
+export const PAST_EXAMS = SOURCES.flatMap((s) => s.pastExams ?? []) // past exam questions and exam practice (on their own pages, not in the totals)
 export const DOCS = [...SOURCES.flatMap((s) => s.docs ?? []), ...webprogDocs] // course PDFs, shown as they are
 
 export const KIND_NAMES = {

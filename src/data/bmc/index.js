@@ -7,6 +7,7 @@ import * as exercise6 from './exercise6'
 import * as exercise7 from './exercise7'
 import { docs } from './docs'
 import { explain } from './explain'
+import { examPractice } from './examPractice'
 import { pastExamItems } from './pastExams'
 
 // Basic Models of Computation: the lecture PDFs (docs, shown by Learn), the exercise tasks and the past exams. No learn cards.
@@ -17,5 +18,5 @@ export default {
   learn: [],
   questions: [...exercises.flatMap((e) => e.questions).map((q) => ({ ...q, ...explain[q.id] }))], // plus the plain-words explanation and the terms to look up
   docs,
-  pastExams: pastExamItems, // past exams, translated and solved; not counted in the progress totals
+  pastExams: [...pastExamItems, ...examPractice], // past exams (translated and solved) and the 2026 exam practice; not counted in the progress totals
 }
