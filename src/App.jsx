@@ -9,7 +9,6 @@ import Learn from './pages/Learn.jsx'
 import CodeExercises from './pages/CodeExercises.jsx'
 import Exercises from './pages/Exercises.jsx'
 import ExamQuestions from './pages/ExamQuestions.jsx'
-import VariantPractice from './pages/VariantPractice.jsx'
 import PastExams from './pages/PastExams.jsx'
 import Practice from './pages/Practice.jsx'
 import Mock from './pages/Mock.jsx'
@@ -54,7 +53,7 @@ function App() {
           <Route path="/s/:subjectId/:week/exercises" element={<Exercises />} />
           <Route path="/s/:subjectId/:week/real-questions" element={<ExamQuestions set="real" />} />
           <Route path="/s/:subjectId/:week/real-exam" element={<QuizOnly><Mock exam set="real" /></QuizOnly>} />
-          <Route path="/s/:subjectId/:week/variants" element={<VariantPractice />} />
+          <Route path="/s/:subjectId/:week/variants" element={<Navigate to="../exercises" relative="path" replace />} />
           <Route path="/s/:subjectId/:week/past-exams" element={<PastExams />} />
           <Route path="/s/:subjectId/:week/practice" element={<QuizOnly><Practice /></QuizOnly>} />
           <Route path="/s/:subjectId/:week/mock" element={<QuizOnly><Mock /></QuizOnly>} />

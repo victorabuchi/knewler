@@ -170,8 +170,10 @@ describe('Exercise 7', () => {
 })
 
 describe('Past exams data', () => {
-  it('has the 14.3.2025 final exam (28 p) and the 3.5.2024 retake (30 p), with the points adding up', () => {
-    expect(pastExams.map((e) => e.title)).toEqual(['Final exam 14.3.2025', 'Retake exam 3.5.2024'])
+  it('has the 2025 exam (28 p), the 2024 exam (28 p) and the 2024 re-exam (30 p), with the points adding up', () => {
+    expect(pastExams.map((e) => e.title)).toEqual(['2025 exam (14.3.2025)', '2024 exam', '2024 re-exam (3.5.2024)'])
+    const ids = pastExams.flatMap((e) => e.questions.map((q) => q.id))
+    expect(new Set(ids).size).toBe(ids.length) // the 2025 and 2024 exams share the questions, not the progress
     for (const e of pastExams) expect(e.questions.reduce((s, q) => s + q.points, 0), e.id).toBe(e.points)
     for (const q of pastExams.flatMap((e) => e.questions)) {
       expect(q.original?.length, q.id).toBeGreaterThan(0)

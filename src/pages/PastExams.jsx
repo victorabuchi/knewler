@@ -32,6 +32,7 @@ function PastExams() {
       <Card body className="mb-4">
         <h2 className="h5 mb-1">{exam.title} <small className="text-body-secondary">({exam.finnishTitle}, {exam.points} points)</small></h2>
         {exam.instructions && <p className="mb-2">{exam.instructions}</p>}
+        {exam.note && <p className="small mb-2"><strong>Note:</strong> {exam.note}</p>}
         <p className="small text-body-secondary mb-2">{exam.questions.length} questions: {exam.questions.map((q) => `${q.no}) ${q.points} p`).join(' · ')}</p>
         <Button size="sm" variant={paper ? 'secondary' : 'dark'} onClick={() => setPaper(!paper)} aria-expanded={paper}>{paper ? 'Hide the original exam paper' : 'Show the original exam paper'}</Button>
         {paper && exam.images.map((img, i) => (
@@ -41,7 +42,7 @@ function PastExams() {
 
       {exam.questions.map((q) => (
         <Card body key={q.id} className="mb-4" as="article" aria-label={q.title}>
-          <PaperQuestion item={{ ...q, kind: 'paper', subject: 'bmc' }} unsureLabel="Still unsure" onScore={(correct) => record(q.id, correct)} />
+          <PaperQuestion item={{ ...q, kind: 'paper', subject: 'bmc' }} onScore={(correct) => record(q.id, correct)} />
         </Card>
       ))}
     </>
