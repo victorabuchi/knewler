@@ -10,12 +10,12 @@ import CodeExercises from './pages/CodeExercises.jsx'
 import Exercises from './pages/Exercises.jsx'
 import ExamQuestions from './pages/ExamQuestions.jsx'
 import VariantPractice from './pages/VariantPractice.jsx'
+import PastExams from './pages/PastExams.jsx'
 import Practice from './pages/Practice.jsx'
 import Mock from './pages/Mock.jsx'
 import Progress from './pages/Progress.jsx'
 import Glossary from './pages/Glossary.jsx'
 import AutomataLab from './pages/AutomataLab.jsx'
-import BmcExam from './pages/BmcExam.jsx'
 import { getSubject } from './data/subjects'
 
 // Practice and Mock exam exist only for courses that have them (a course with quiz: false has Learn and Code exercises only).
@@ -47,8 +47,7 @@ function App() {
           <Route path="/s/:subjectId" element={<Subject />} />
           <Route path="/s/webprog/glossary" element={<Glossary />} />
           <Route path="/s/bmc/automata" element={<AutomataLab />} />
-          <Route path="/s/bmc/all/exam" element={<BmcExam />} />
-          <Route path="/s/bmc/:week/exam" element={<BmcExam />} />
+          <Route path="/s/bmc/:week/exam" element={<Navigate to="/s/bmc/all/past-exams" replace />} />
           <Route path="/s/:subjectId/:week" element={<WeekHub />} />
           <Route path="/s/:subjectId/:week/learn" element={<Learn />} />
           <Route path="/s/:subjectId/:week/code" element={<CodeExercises />} />
@@ -56,6 +55,7 @@ function App() {
           <Route path="/s/:subjectId/:week/real-questions" element={<ExamQuestions set="real" />} />
           <Route path="/s/:subjectId/:week/real-exam" element={<QuizOnly><Mock exam set="real" /></QuizOnly>} />
           <Route path="/s/:subjectId/:week/variants" element={<VariantPractice />} />
+          <Route path="/s/:subjectId/:week/past-exams" element={<PastExams />} />
           <Route path="/s/:subjectId/:week/practice" element={<QuizOnly><Practice /></QuizOnly>} />
           <Route path="/s/:subjectId/:week/mock" element={<QuizOnly><Mock /></QuizOnly>} />
           <Route path="/s/:subjectId/:week/exam" element={<QuizOnly><Mock exam /></QuizOnly>} />
