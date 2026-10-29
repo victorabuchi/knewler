@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { countTrees, dfa, groups, language, pdaAccepts, tmRun, words } from '../../test/formal'
+import { ITEMS } from '../content'
+import { examMatches, matchesOfTask } from './examMatches'
 import { EXAM_AUTOMATON, EXAM_AUTOMATON_3, EXAM_AUTOMATON_MIN, EXAM_GRAMMARS, EXAM_REGEX, pastExams } from './pastExams'
 import { FA7, PDA7, REGEX7, TM_PLUS_ONE, questions as x7 } from './exercise7'
 import { questions as x5 } from './exercise5'
@@ -179,5 +181,21 @@ describe('Past exams data', () => {
       expect(q.original?.length, q.id).toBeGreaterThan(0)
       expect(q.answer.length, q.id).toBeGreaterThan(1)
     }
+  })
+})
+
+describe('Which exercises the exams come from', () => {
+  it('names real exercise tasks and past-exam questions, and every exam question is in exactly one match', () => {
+    const titles = new Map(ITEMS.map((i) => [i.id, i.title]))
+    for (const [id, label] of examMatches.flatMap((m) => m.tasks)) expect(titles.get(id), id).toMatch(new RegExp(`^${label}\\.`))
+    const questions = pastExams.flatMap((e) => e.questions.map((q) => q.id)).sort()
+    expect(examMatches.flatMap((m) => m.exams).sort()).toEqual(questions)
+  })
+
+  it('the three tasks the exams always used: the hexagon automaton, the grammars, P and NP', () => {
+    expect(matchesOfTask('bmc-x3-4')[0].exams).toHaveLength(3)
+    expect(matchesOfTask('bmc-x5-2')[0].exams).toHaveLength(3)
+    expect(matchesOfTask('bmc-x6-1').flatMap((m) => m.exams)).toHaveLength(3)
+    expect(EXAM_GRAMMARS.b).toBe('S → ε | ABS\nA → a | bA\nB → ε | bBb') // X5 T2 a)
   })
 })

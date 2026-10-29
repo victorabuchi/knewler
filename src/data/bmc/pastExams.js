@@ -64,6 +64,7 @@ const minimalAnswer = [
   'Use the partition method. P0: accepting and non-accepting states. Then split the states of a group that go to different groups.',
   code('P0 = {0}, {1, 2, 3, 4, 5}\n     on (a, b): 1 → (2, 3) both non-acc.,  2 → (3, 4) both non-acc.,  3 → (4, 5) both non-acc.\n                4 → (5, 0) non-acc. / acc.,  5 → (0, 1) acc. / non-acc.\nP1 = {0}, {1, 2, 3}, {4}, {5}\n     1 → (2, 3) both in {1,2,3},  2 → (3, 4) {1,2,3} / {4},  3 → (4, 5) {4} / {5}\nP2 = {0}, {1}, {2}, {3}, {4}, {5}'),
   'All states are separate: no states can be merged, so the automaton is already minimal. (Each state is a different remainder mod 6; reading some a\'s tells them apart.)',
+  'The teacher\'s answer to exercise 3 task 5 splits one group at a time (P1 = {q0}, {q1,q2,q3}, {q4,q5}; P2 = {q0}, {q1}, {q2,q3}, {q4,q5}; P3 splits q2, q3; then q4, q5). Both ways end the same: all six states are separate, the DFA was already minimal.',
 ]
 const state3Language = 'L = { w ∈ {a,b}* | |w|a + 2|w|b ≡ 0 (mod 3) }: the weighted sum is a multiple of 3 (each a worth 1, each b worth 2). States 0 and 3 accept, and 0 ≡ 3 (mod 3).'
 const state3Minimal = [
@@ -111,7 +112,7 @@ const finalExam = (prefix, name) => [
       ...lengthsAnswer,
       'a) It accepts the empty word and words of every length from 3 on (for each length n ≥ 3 some, not all, words); no word of length 1 or 2.',
       'b) L = { w ∈ {a,b}* | |w|a + 2|w|b ≡ 0 (mod 6) }: the weighted count of the symbols is a multiple of 6, each a worth 1 and each b worth 2.',
-      'c) ' + minimalAnswer[0], minimalAnswer[1], minimalAnswer[2],
+      'c) ' + minimalAnswer[0], ...minimalAnswer.slice(1),
       'd) (b) with states 0 and 3 accepting: ' + state3Language,
       'd) (c) ' + state3Minimal[0], state3Minimal[1],
     ],
@@ -123,20 +124,20 @@ const finalExam = (prefix, name) => [
 
 export const pastExams = [
   {
-    id: 'final-2025', title: '2025 exam (14.3.2025)', finnishTitle: 'Lopputentti 14.3.2025', points: 28,
+    id: 'final-2025', short: '2025 exam', title: '2025 exam (14.3.2025)', finnishTitle: 'Lopputentti 14.3.2025', points: 28,
     images: ['bmc-final-2025-1.jpg', 'bmc-final-2025-2.jpg'],
     instructions: 'Calculators may not be used or even be present in the exam. JUSTIFYING your answers is important: the grader cannot get inside your head to see how the solution was formed, so justify your answers.',
     questions: finalExam('bmc-past-2025', '2025 exam'),
   },
   {
-    id: 'final-2024', title: '2024 exam', finnishTitle: 'Lopputentti', points: 28,
+    id: 'final-2024', short: '2024 exam', title: '2024 exam', finnishTitle: 'Lopputentti', points: 28,
     images: ['bmc-final-2024-1.jpg', 'bmc-final-2024-2.jpg'],
     instructions: 'Calculators may not be used or even be present in the exam. JUSTIFYING your answers is important: the grader cannot get inside your head to see how the solution was formed, so justify your answers.',
     note: 'The paper has no date. Its questions are word for word the same as the 2025 exam, so the answers are the same too.',
     questions: finalExam('bmc-past-2024f', '2024 exam'),
   },
   {
-    id: 'retake-2024', title: '2024 re-exam (3.5.2024)', finnishTitle: 'Uusintatentti 3.5.2024', points: 30,
+    id: 'retake-2024', short: '2024 re-exam', title: '2024 re-exam (3.5.2024)', finnishTitle: 'Uusintatentti 3.5.2024', points: 30,
     images: ['bmc-retake-2024-1.jpg', 'bmc-retake-2024-2.jpg'],
     instructions: '',
     questions: [
@@ -160,7 +161,7 @@ export const pastExams = [
           ...lengthsAnswer,
           'a) The empty word and words of every length from 3 on; no word of length 1 or 2.',
           'b) L = { w ∈ {a,b}* | |w|a + 2|w|b ≡ 0 (mod 6) }.',
-          'c) ' + minimalAnswer[0], minimalAnswer[1], minimalAnswer[2],
+          'c) ' + minimalAnswer[0], ...minimalAnswer.slice(1),
           'd) (a) with states 0 and 3 accepting: ' + state3Lengths,
           'd) (b) ' + state3Language,
         ] },
