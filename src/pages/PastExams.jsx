@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Button, Card, Table } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
 import PaperQuestion from '../components/PaperQuestion.jsx'
 import { ITEMS } from '../data/content'
-import { examMatches, examQuestion, matchOfQuestion } from '../data/bmc/examMatches'
+import { matchOfQuestion } from '../data/bmc/examMatches'
 import { pastExams } from '../data/bmc/pastExams'
 import { useProgress } from '../hooks/useProgress'
 
@@ -19,7 +19,7 @@ function taskLink(subjectId, id) {
 
 // Past exams of a course, translated into English and solved in the teacher's style. Like a paper exam: all questions on one page,
 // each with Show answer (and the Finnish original). The original exam paper can be shown as photos. ?exam=final-2024 picks the exam.
-// On top: which exercise tasks the exam questions come from.
+// Each question says which exercise tasks it comes from (the 2026 exam page has them all).
 function PastExams() {
   const { subjectId, week } = useParams()
   const { record } = useProgress()
@@ -35,23 +35,6 @@ function PastExams() {
       <Crumbs subjectId={subjectId} week={week} current="Past exams" />
       <h1 className="h3">Past exams</h1>
       <p className="text-body-secondary">Old exams of the course, translated from Finnish and solved step by step, the same way the teacher solves the exercises. Solve each question on paper first, then show the answer.</p>
-
-      <Card body className="mb-4">
-        <h2 className="h5">Which exercises the exams come from</h2>
-        <p className="mb-2">The lecturer said that three of the exam questions come from the exercises. In all three past exams they were the same tasks: <strong>X3 T4 + T5</strong> (the hexagon automaton), <strong>X5 T2</strong> (which grammar is not regular) and <strong>X6 T1</strong> (in P? in NP?). Make sure you can solve these without help. This is the pattern of the past exams, not a promise about this one.</p>
-        <Table responsive size="sm" className="small mb-0">
-          <thead><tr><th scope="col">Exercise task</th><th scope="col">Past exam question</th><th scope="col">How close</th></tr></thead>
-          <tbody>
-            {examMatches.map((m) => (
-              <tr key={m.topic}>
-                <td>{m.tasks.length ? taskLinks(m.tasks) : '—'}<div className="text-body-secondary">{m.topic}</div></td>
-                <td>{m.exams.map((id) => <div key={id}><Button variant="link" size="sm" className="p-0 align-baseline text-nowrap text-start" onClick={() => pick(examQuestion(id).exam)}>{examQuestion(id).label}</Button></div>)}</td>
-                <td><strong>{m.match}.</strong> {m.how}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Card>
 
       <div className="d-flex flex-wrap gap-2 mb-3" role="group" aria-label="Exams">
         {pastExams.map((e) => (
