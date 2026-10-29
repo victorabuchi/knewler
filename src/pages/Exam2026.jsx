@@ -1,6 +1,7 @@
 import { Card } from 'react-bootstrap'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
+import ExamAnswer from '../components/ExamAnswer.jsx'
 import PaperQuestion from '../components/PaperQuestion.jsx'
 import { ITEMS } from '../data/content'
 import { examMatches, examQuestion } from '../data/bmc/examMatches'
@@ -8,7 +9,7 @@ import { useProgress } from '../hooks/useProgress'
 
 // The 2026 exam, prepared from the past exams: the exercise tasks that the 2025 exam, the 2024 exam and the 2024 re-exam were built from,
 // grouped by the exam question they became. Each task is the exercise itself (same id, so the progress is shared with Exercises),
-// with the teacher's answer page under Show answer.
+// with the teacher's answer page under Show answer. Each group has what to write in the exam (the short answer that gets the points).
 function Exam2026() {
   const { subjectId, week } = useParams()
   const { record } = useProgress()
@@ -26,7 +27,7 @@ function Exam2026() {
     <>
       <Crumbs subjectId={subjectId} week={week} current="2026 exam" />
       <h1 className="h3">2026 exam</h1>
-      <p className="text-body-secondary">The lecturer said that three of the exam questions come from the exercises. In the 2025 exam, the 2024 exam and the 2024 re-exam they were always these tasks. Solve each one on paper, then compare with the teacher's answer. This is what the past exams point to, not the real 2026 paper.</p>
+      <p className="text-body-secondary">The lecturer said that three of the exam questions come from the exercises. In the 2025 exam, the 2024 exam and the 2024 re-exam they were always these tasks. Solve each one on paper, then compare with the teacher's answer. The teacher's answers explain a lot; "What to write in the exam" shows the short version that gets the points. This is what the past exams point to, not the real 2026 paper.</p>
 
       {sections.map((m, n) => (
         <section key={m.topic} className="mb-4" aria-label={m.topic}>
@@ -37,6 +38,7 @@ function Exam2026() {
             {' '}({m.match.toLowerCase()}). {m.how}
             {m.earlier.length > 0 && ` ${m.earlier.join(', ')} is above.`}
           </p>
+          <ExamAnswer write={m.write} />
           {m.items.map((item) => (
             <Card body key={item.id} className="mb-3" as="article" aria-label={item.title}>
               <p className="text-body-secondary small mb-2">{item.exercise}</p>

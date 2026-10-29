@@ -323,6 +323,29 @@ describe('2026 exam: the exercise tasks the past exams came from', () => {
     expect(screen.getByRole('heading', { name: /^2024 exam \(Lopputentti, 28 points\)/ })).toBeInTheDocument()
   })
 
+  it('has "What to write in the exam" for each group: the short answer with the steps', async () => {
+    const user = userEvent.setup()
+    renderApp('/s/bmc/all/exam-2026')
+    expect(screen.getAllByRole('button', { name: 'What to write in the exam' })).toHaveLength(4)
+    expect(screen.queryByRole('region', { name: 'What to write in the exam' })).not.toBeInTheDocument()
+    const hexagon = within(screen.getByRole('region', { name: 'The hexagon automaton' }))
+    await user.click(hexagon.getByRole('button', { name: 'What to write in the exam' }))
+    const write = hexagon.getByRole('region', { name: 'What to write in the exam' })
+    expect(write).toHaveTextContent('P1 = {0}, {1,2,3}, {4}, {5}')
+    expect(write).toHaveTextContent('P1 = {0,3}, {1,4}, {2,5}')
+    await user.click(hexagon.getByRole('button', { name: 'Hide what to write' }))
+    expect(hexagon.queryByRole('region', { name: 'What to write in the exam' })).not.toBeInTheDocument()
+  })
+
+  it('past exam questions have it too', async () => {
+    const user = userEvent.setup()
+    renderApp('/s/bmc/all/past-exams?exam=retake-2024')
+    const q1 = within(screen.getByRole('article', { name: /2024 re-exam, question 1/ }))
+    await user.click(q1.getByRole('button', { name: 'What to write in the exam' }))
+    expect(q1.getByRole('region', { name: 'What to write in the exam' })).toHaveTextContent('NP-complete: in NP and NP-hard')
+    expect(screen.getAllByRole('button', { name: /What to write in the exam|Hide what to write/ })).toHaveLength(4) // feedback too
+  })
+
   it('is only for Basic Models of Computation', () => {
     renderApp('/s/webprog/all/exam-2026')
     expect(screen.getByRole('heading', { name: 'Web Programming I' })).toBeInTheDocument()

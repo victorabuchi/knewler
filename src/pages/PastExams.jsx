@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
+import ExamAnswer from '../components/ExamAnswer.jsx'
 import PaperQuestion from '../components/PaperQuestion.jsx'
 import { ITEMS } from '../data/content'
 import { matchOfQuestion } from '../data/bmc/examMatches'
@@ -59,6 +60,7 @@ function PastExams() {
           <Card body key={q.id} className="mb-4" as="article" aria-label={q.title}>
             {m?.tasks.length > 0 && <p className="small mb-2"><strong>From the exercises:</strong> {taskLinks(m.tasks)} ({m.match.toLowerCase()})</p>}
             <PaperQuestion item={{ ...q, kind: 'paper', subject: 'bmc' }} onScore={(correct) => record(q.id, correct)} />
+            {m?.write && <ExamAnswer write={m.write} />}
           </Card>
         )
       })}

@@ -192,6 +192,16 @@ describe('Which exercises the exams come from', () => {
     expect(examMatches.flatMap((m) => m.exams).sort()).toEqual(questions)
   })
 
+  it('every match has a short exam answer, and the grammar answer uses the checked regular expressions', () => {
+    for (const m of examMatches) expect(m.write?.length, m.topic).toBeGreaterThan(0)
+    const grammars = examMatches.find((m) => m.topic === 'Which grammar is not regular?').write[0].code
+    for (const k of ['a', 'b', 'c', 'd']) {
+      const r = EXAM_REGEX[k].startsWith('|') ? `ε | ${EXAM_REGEX[k].slice(1)}` : EXAM_REGEX[k]
+      expect(grammars).toContain(`(${k}) ${r}`)
+    }
+    expect(grammars).toContain('(e) is not regular')
+  })
+
   it('the three tasks the exams always used: the hexagon automaton, the grammars, P and NP', () => {
     expect(matchesOfTask('bmc-x3-4')[0].exams).toHaveLength(3)
     expect(matchesOfTask('bmc-x5-2')[0].exams).toHaveLength(3)

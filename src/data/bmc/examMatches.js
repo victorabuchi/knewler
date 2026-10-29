@@ -1,22 +1,118 @@
 // Which exercise tasks the past exams were built from, checked against the exam papers and the teacher's exercise pages.
 // The lecturer said that three of the exam questions come from the exercises. In all three past exams they were these tasks.
-import { pastExams } from './pastExams'
+// `write` is what to write in the exam: the teacher's solution cut down to the result, the reason and the key steps.
+import { EXAM_REGEX, pastExams } from './pastExams'
+
+const code = (text) => ({ code: text })
+const regex = (r) => (r.startsWith('|') ? `ε | ${r.slice(1)}` : r) // '' | x is written ε | x
 
 export const examMatches = [
   { tasks: [['bmc-x3-4', 'X3 T4'], ['bmc-x3-5', 'X3 T5']], topic: 'The hexagon automaton',
     exams: ['bmc-past-2025-2', 'bmc-past-2024f-2', 'bmc-past-2024-2'], match: 'Exact',
-    how: 'The same figure (Q = {0, ..., 5}, the same transitions, F = {0}) and the same questions: which lengths, which language, minimal or not, and what changes when state 3 accepts. Part d) of the 2025 and 2024 exams asks again about (b) and (c), the re-exam about (a) and (b).' },
+    how: 'The same figure (Q = {0, ..., 5}, the same transitions, F = {0}) and the same questions: which lengths, which language, minimal or not, and what changes when state 3 accepts. Part d) of the 2025 and 2024 exams asks again about (b) and (c), the re-exam about (a) and (b).',
+    write: [
+      code(`δ(i, a) = i + 1 (mod 6),  δ(i, b) = i + 2 (mod 6)
+→ the state is the weighted sum of the word: a = 1, b = 2 (mod 6)
+
+a) Accepts ε and words of every length n ≥ 3. Rejects lengths 1 and 2.
+   n symbols weigh from n (all a) to 2n (all b):
+   n = 1: {1, 2},  n = 2: {2, 3, 4}  → no multiple of 6
+   n ≥ 3: [n, 2n] always has a multiple of 6  (bbb = 6, aabb = 6, aaaab = 6)
+
+b) L = { w ∈ {a,b}* | |w|a + 2|w|b ≡ 0 (mod 6) }
+
+c) Already minimal. Partition method:
+   P0 = {0}, {1,2,3,4,5}               accepting / not accepting
+   P1 = {0}, {1,2,3}, {4}, {5}         4 –b→ 0 and 5 –a→ 0
+   P2 = {0}, {1}, {2}, {3}, {4}, {5}   1 → (2,3), 2 → (3,4), 3 → (4,5)
+   All states are separate → no states can be merged.
+
+d) States 0 and 3 accepting:
+   (a) accepts ε and every length n ≥ 2; rejects length 1 (1, 2 ≢ 0 mod 3)
+       e.g. ab = 3, ba = 3, aaa = 3
+   (b) L = { w ∈ {a,b}* | |w|a + 2|w|b ≡ 0 (mod 3) }   (because 0 ≡ 3 mod 3)
+   (c) not minimal any more:
+       P0 = {0,3}, {1,2,4,5}
+       P1 = {0,3}, {1,4}, {2,5}   → stable: 3 states (the remainder mod 3)
+       {0,3} –a→ {1,4} –a→ {2,5} –a→ {0,3}
+       {0,3} –b→ {2,5} –b→ {1,4} –b→ {0,3}`),
+      'Answer only the parts of d) that are asked: the 2025 and 2024 exams ask (b) and (c), the re-exam (a) and (b). Draw the 3-state automaton for (c).',
+    ] },
   { tasks: [['bmc-x5-2', 'X5 T2']], topic: 'Which grammar is not regular?',
     exams: ['bmc-past-2025-3', 'bmc-past-2024f-3', 'bmc-past-2024-3'], match: 'Exact for 3 of the 5 grammars',
-    how: 'X5 a) is exam (b), X5 b) is exam (e) (the one that is not regular) and X5 c) is exam (c). Exam (a) only changes B to ε | bB, and exam (d) A to a: solve them the same way.' },
+    how: 'X5 a) is exam (b), X5 b) is exam (e) (the one that is not regular) and X5 c) is exam (c). Exam (a) only changes B to ε | bB, and exam (d) A to a: solve them the same way.',
+    write: [
+      code(`What each part produces:
+A → a | bA     A = b*a
+A → a          A = a
+B → ε | bB     B = b*
+B → ε | bBb    B = (bb)*
+B → b | bBb    B = b(bb)*   (an odd number of b's, at least one)
+S → ε | ABS    ABAB...  = (AB)*
+S → ε | ASB    AⁿBⁿ     (as many B's as A's)
+
+a) (e) is not regular.
+   S ⇒ ASB ⇒ AASBB ⇒ AABB ⇒ aabb: every a gets at least one b after it
+   L(e) = {ε} ∪ { aⁿbᵐ | n ≥ 1, m ≥ n, m − n even }
+   A finite automaton has finitely many states, so it cannot count the a's:
+   if aⁱ and aʲ (i < j) end in the same state, it also accepts aʲbⁱ (wrong).
+   It needs a stack: a pushdown automaton.
+
+b) (a) ${regex(EXAM_REGEX.a)}
+   (b) ${regex(EXAM_REGEX.b)}
+   (c) ${regex(EXAM_REGEX.c)}
+   (d) ${regex(EXAM_REGEX.d)}
+   (c) and (d) are regular although S → ASB: B can be ε, so
+   (bb)*(bb)*...(bb)* = (bb)* and nothing has to be counted.`),
+    ] },
   { tasks: [['bmc-x6-1', 'X6 T1']], topic: 'In P? In NP? Why?',
     exams: ['bmc-past-2025-1', 'bmc-past-2024f-1'], match: 'Near',
-    how: 'The same questions about the knapsack problem instead of subset sum: 2ⁿ subsets to try, but a guessed subset is checked in O(n).' },
+    how: 'The same questions about the knapsack problem instead of subset sum: 2ⁿ subsets to try, but a guessed subset is checked in O(n).',
+    write: [
+      code(`n items, each one is in the knapsack or not → 2ⁿ subsets
+
+a) Not in P (as far as is known).
+   No polynomial algorithm is known: trying all subsets is O(2ⁿ), exponential.
+   Knapsack is NP-hard (its yes/no version is NP-complete), so a polynomial
+   algorithm would mean P = NP.
+
+b) Yes, in NP (the yes/no version: is there a subset with
+   total volume ≤ capacity and total value ≥ k?)
+   guess a subset               n
+   add the volumes and values   ~2n
+   compare with the limits      2
+   → a solution is checked in O(n), polynomial time → NP`),
+      'The same answer works for subset sum (X6 T1), SAT (X6 T3) and independent set (X7 t1): count the choices (2ⁿ), then guess and check in polynomial time.',
+    ] },
   { tasks: [['bmc-x6-1', 'X6 T1'], ['bmc-x6-2', 'X6 T2'], ['bmc-x7-1', 'X7 t1']], topic: 'NP: explain the terms',
     exams: ['bmc-past-2024-1'], match: 'Same topic',
-    how: 'Not one task: the definitions are in these answers. Polynomial and exponential time (X6 T2), P and NP with guess and check (X6 T1), NP-hard and NP-complete (X7 t1, independent set).' },
+    how: 'Not one task: the definitions are in these answers. Polynomial and exponential time (X6 T2), P and NP with guess and check (X6 T1), NP-hard and NP-complete (X7 t1, independent set).',
+    write: [
+      code(`a) Polynomially bounded time: at most c·nᵏ steps for a fixed k,
+   e.g. O(n), O(n²). Exponential O(2ⁿ) grows much faster.
+b) P: problems a deterministic algorithm solves in polynomial time,
+   e.g. finding a number in a sorted list, running a DFA on a word.
+c) NP: problems whose proposed solution can be checked in polynomial time
+   (a nondeterministic machine guesses the solution and checks it),
+   e.g. subset sum: guess, add up, compare → O(n).  P ⊆ NP.
+d) NP-hard: at least as hard as every NP problem: every NP problem can be
+   reduced to it in polynomial time. It need not be in NP itself
+   (e.g. the halting problem).
+e) NP-complete: in NP and NP-hard, the hardest problems in NP,
+   e.g. SAT, subset sum, independent set. A polynomial algorithm for one
+   of them would mean P = NP.`),
+    ] },
   { tasks: [], topic: 'Course feedback', exams: ['bmc-past-2024-4'], match: 'No exercise',
-    how: 'Your own reflection on the course (3 p).' },
+    how: 'Your own reflection on the course (3 p).',
+    write: [
+      'Answer every question in one or two concrete sentences, in your own words:',
+      code(`What I learned:        e.g. finite automata, grammars and regular expressions
+                       describe the same languages; a PDA adds a stack
+Best experience:       e.g. minimizing an automaton by hand
+What stuck in mind:    e.g. P vs NP
+What I would change:   one concrete suggestion and why
+Why it matters to me:  e.g. regular expressions and parsing in programming`),
+    ] },
 ]
 
 // "2025 exam Q2" and the exam it is in, for a past-exam question id.
