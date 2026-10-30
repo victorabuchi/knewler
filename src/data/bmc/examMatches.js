@@ -1,12 +1,93 @@
 // Which exercise tasks the past exams were built from, checked against the exam papers and the teacher's exercise pages.
-// The lecturer said that three of the exam questions come from the exercises. In all three past exams they were these tasks.
+// The lecturer said that three of the exam questions come from the exercises. The 2026 exam used four other tasks (first here),
+// the 2025 exam, the 2024 exam and the 2024 re-exam the ones after them.
 // `write` is what to write in the exam: the teacher's solution cut down to the result, the reason and the key steps.
-import { EXAM_REGEX, pastExams } from './pastExams'
+import { EXAM_2026, EXAM_REGEX, pastExams } from './pastExams'
 
 const code = (text) => ({ code: text })
 const regex = (r) => (r.startsWith('|') ? `ε | ${r.slice(1)}` : r) // '' | x is written ε | x
 
 export const examMatches = [
+  // ---------- the 2026 exam ----------
+  { tasks: [['bmc-x6-1', 'X6 T1']], topic: 'Factorization: in P? In NP?',
+    exams: ['bmc-past-2026-1'], match: 'Near',
+    how: 'The same questions as X6 T1 about another problem. The new part: the input is a number k, so the size of the input is the number of digits of k.',
+    write: [
+      code(`Input: k written with n digits (n ≈ log k). The time is measured in n.
+
+Solve: trial division tries 2, 3, ..., √k
+  √k ≈ 10^(n/2) divisions: exponential in n
+  (20 digits: 10¹⁰, 100 digits: 10⁵⁰)
+
+P?  Not known (as far as is known, no).
+    No polynomial algorithm for factoring
+    is known (RSA encryption relies on it).
+
+NP? Yes, the yes/no version:
+    does k have a factor d, 1 < d < m?
+    guess d (n digits), divide k by d,
+    check the remainder is 0: O(n²)
+    → checked in polynomial time → NP
+    (a whole factorization k1·k2·…·km is
+    checked by multiplying the numbers)`),
+      'The same pattern as subset sum (X6 T1): many possibilities to try, but a guess is checked fast. Say that the size of the input is the number of digits, not k: that is why √k divisions is not polynomial.',
+    ] },
+  { tasks: [['bmc-x7-4', 'X7 t4']], topic: 'Draw the languages as finite automata',
+    exams: ['bmc-past-2026-2'], match: 'Exact',
+    how: 'The same five languages: a*cb*, (ab)*, (abba)*, a+b+ and (0|1)^8.',
+    write: [
+      'Draw each one: an arrow into the start state, double circles for the accepting states, one arrow per symbol. In words:',
+      code(EXAM_2026.automata),
+      'Missing arrows reject (like in JFLAP), or draw one trap state that all of them go to.',
+    ] },
+  { tasks: [['bmc-x5-2', 'X5 T2']], topic: 'Regular or not? Three grammars',
+    exams: ['bmc-past-2026-3'], match: 'Exact except one rule',
+    how: 'The three grammars of X5 T2, but in b) B got one more alternative: B → b | bBb | ε. That ε makes b) regular.',
+    write: [
+      code(`What each part produces:
+A → a | bA       A = b*a
+A → a            A = a
+B → ε | bBb      B = (bb)*
+B → b | bBb | ε  B = b*
+S → ε | ABS      (AB)*
+S → ε | ASB      AⁿBⁿ
+B = b*: any number of b's
+AⁿBⁿ: as many B's as A's
+
+a) regular: ${regex(EXAM_2026.regex.a)}
+b) regular: ${regex(EXAM_2026.regex.b)}
+   S ⇒ AⁿSBⁿ ⇒ aⁿ b*…b*
+     = aⁿb*  (n ≥ 1)
+   the b's do not depend on n:
+   aaa, ab, abbbb are all in it.
+   Without "| ε": B = b(bb)*,
+   #b ≥ #a → not regular.
+c) regular: ${regex(EXAM_2026.regex.c)}
+   B can be ε:
+   (bb)*(bb)*…(bb)* = (bb)*,
+   nothing has to be counted.`),
+    ] },
+  { tasks: [['bmc-x5-4', 'X5 T4']], topic: 'Which model recognizes each language?',
+    exams: ['bmc-past-2026-4'], match: 'Exact',
+    how: 'The same four languages over {0, 1}: 0ⁿ1ⁿ, (0|1)*10, 0ⁿ0ⁿ and 0ᵖ1ʳ0ᵖ⁻ʳ.',
+    write: [
+      code(`a) 0ⁿ1ⁿ (n ≥ 1): n zeros, then as many ones
+   PDA: push the 0s, pop one for each 1,
+   the stack is empty at the end.
+   Not an FA: n has no upper limit.
+b) (0|1)*10: strings that end with 10
+   FA: remember the last two symbols (3 states).
+c) 0ⁿ0ⁿ = (00)*: an even number of zeros
+   FA with 2 states (even / odd).
+d) 0ᵖ1ʳ0ᵖ⁻ʳ (p ≥ r): p zeros, r ones, p − r zeros
+   PDA: push the first 0s, pop one for each 1
+   and for each 0 of the last block.
+
+FA = fixed memory, PDA = one stack (one count),
+TM = a tape (several counts, e.g. aⁿbⁿcⁿ)`),
+    ] },
+
+  // ---------- the 2025 exam, the 2024 exam and the 2024 re-exam ----------
   { tasks: [['bmc-x3-4', 'X3 T4'], ['bmc-x3-5', 'X3 T5']], topic: 'The hexagon automaton',
     exams: ['bmc-past-2025-2', 'bmc-past-2024f-2', 'bmc-past-2024-2'], match: 'Exact',
     how: 'The same figure (Q = {0, ..., 5}, the same transitions, F = {0}) and the same questions: which lengths, which language, minimal or not, and what changes when state 3 accepts. Part d) of the 2025 and 2024 exams asks again about (b) and (c), the re-exam about (a) and (b).',

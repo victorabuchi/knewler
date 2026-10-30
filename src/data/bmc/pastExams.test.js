@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { countTrees, dfa, groups, language, pdaAccepts, tmRun, words } from '../../test/formal'
+import { countTrees, dfa, examplesOf, groups, language, pdaAccepts, tmRun, words } from '../../test/formal'
 import { ITEMS } from '../content'
 import { examMatches, matchesOfTask } from './examMatches'
-import { EXAM_AUTOMATON, EXAM_AUTOMATON_3, EXAM_AUTOMATON_MIN, EXAM_GRAMMARS, EXAM_REGEX, pastExams } from './pastExams'
+import { EXAM_2026, EXAM_AUTOMATON, EXAM_AUTOMATON_3, EXAM_AUTOMATON_MIN, EXAM_GRAMMARS, EXAM_REGEX, pastExams } from './pastExams'
 import { FA7, PDA7, REGEX7, TM_PLUS_ONE, questions as x7 } from './exercise7'
 import { questions as x5 } from './exercise5'
 import { questions as x6 } from './exercise6'
@@ -171,16 +171,58 @@ describe('Exercise 7', () => {
   }, 60000)
 })
 
+describe('The 2026 exam', () => {
+  it('question 2: the automata accept the expressions, and the example words in the answer are right', () => {
+    const examples = examplesOf(EXAM_2026.automata)
+    expect(Object.keys(examples)).toEqual(['a', 'b', 'c', 'd', 'e'])
+    for (const [k, { yes, no }] of Object.entries(examples)) {
+      const f = dfa(FA7[k])
+      for (const w of yes) expect(f(w), `${k} ${w}`).toBe(true)
+      for (const w of no) expect(f(w), `${k} ${w}`).toBe(false)
+    }
+  })
+
+  it('question 3: all three grammars are regular, b) only because of the new "| ε"', () => {
+    for (const [k, r] of Object.entries(EXAM_2026.regex)) {
+      const lang = language(EXAM_2026.grammars[k], 7)
+      for (const w of words(['a', 'b'], 7)) expect(lang.has(w), `${k}: ${w}`).toBe(re(r).test(w))
+    }
+    expect(['aaa', 'ab', 'abbbb'].every((w) => re(EXAM_2026.regex.b).test(w))).toBe(true)
+    expect(EXAM_2026.grammars.a).toBe(x5[1].prompt[1].split('\n')[0].replace(/^a\) /, '').replace(/,\s+/g, '\n')) // X5 T2 a) and c)
+    expect(EXAM_2026.grammars.c).toBe(x5[1].prompt[1].split('\n')[2].replace(/^c\) /, '').replace(/,\s+/g, '\n'))
+    // without the ε (exercise 5 task 2 b): at least as many b's as a's, not regular
+    const x5b = language('S → ε | ASB\nA → a\nB → b | bBb', 8)
+    expect(x5b.has('aaa') || x5b.has('aab')).toBe(false)
+    expect(x5b.has('ab') && x5b.has('abbb') && x5b.has('aabbbb')).toBe(true)
+  })
+
+  it('question 4: the example words fit the languages, and c) is (00)*', () => {
+    const answer = pastExams[0].questions[3].answer[1].code
+    const lines = answer.split('\n\n')
+    const examples = (i) => lines[i].split('\n')[1].replace(/.*: /, '').split(', ').map((w) => (w === 'ε' ? '' : w))
+    const zn1n = (w) => /^(0+)(1+)$/.test(w) && w.indexOf('1') * 2 === w.length
+    const d = (w) => Array.from({ length: w.length + 1 }, (_, p) => Array.from({ length: p + 1 }, (_, r) => '0'.repeat(p) + '1'.repeat(r) + '0'.repeat(p - r))).flat().includes(w)
+    expect(examples(0).every(zn1n)).toBe(true)
+    expect(examples(1).every((w) => w.endsWith('10'))).toBe(true)
+    expect(examples(2).every((w) => re('(00)*').test(w))).toBe(true)
+    expect(examples(3).every(d)).toBe(true)
+    expect(examples(3)).toEqual(['', '00', '01', '0010', '000100'])
+  })
+})
+
 describe('Past exams data', () => {
-  it('has the 2025 exam (28 p), the 2024 exam (28 p) and the 2024 re-exam (30 p), with the points adding up', () => {
-    expect(pastExams.map((e) => e.title)).toEqual(['2025 exam (14.3.2025)', '2024 exam', '2024 re-exam (3.5.2024)'])
+  it('has the 2026 exam (from memory), the 2025 exam (28 p), the 2024 exam (28 p) and the 2024 re-exam (30 p), with the points adding up', () => {
+    expect(pastExams.map((e) => e.title)).toEqual(['2026 exam (30.10.2026)', '2025 exam (14.3.2025)', '2024 exam', '2024 re-exam (3.5.2024)'])
     const ids = pastExams.flatMap((e) => e.questions.map((q) => q.id))
     expect(new Set(ids).size).toBe(ids.length) // the 2025 and 2024 exams share the questions, not the progress
-    for (const e of pastExams) expect(e.questions.reduce((s, q) => s + q.points, 0), e.id).toBe(e.points)
-    for (const q of pastExams.flatMap((e) => e.questions)) {
-      expect(q.original?.length, q.id).toBeGreaterThan(0)
-      expect(q.answer.length, q.id).toBeGreaterThan(1)
+    for (const e of pastExams.filter((x) => !x.fromMemory)) expect(e.questions.reduce((s, q) => s + q.points, 0), e.id).toBe(e.points)
+    for (const e of pastExams) {
+      for (const q of e.questions) {
+        if (!e.fromMemory) expect(q.original?.length, q.id).toBeGreaterThan(0) // the Finnish text of the paper
+        expect(q.answer.length, q.id).toBeGreaterThan(1)
+      }
     }
+    expect(pastExams[0].questions.map((q) => q.no)).toEqual([1, 2, 3, 4])
   })
 })
 
@@ -202,10 +244,14 @@ describe('Which exercises the exams come from', () => {
     expect(grammars).toContain('(e) is not regular')
   })
 
-  it('the three tasks the exams always used: the hexagon automaton, the grammars, P and NP', () => {
+  it('the tasks the exams used: the hexagon automaton, the grammars, P and NP; in 2026 also X7 t4 and X5 T4', () => {
     expect(matchesOfTask('bmc-x3-4')[0].exams).toHaveLength(3)
-    expect(matchesOfTask('bmc-x5-2')[0].exams).toHaveLength(3)
-    expect(matchesOfTask('bmc-x6-1').flatMap((m) => m.exams)).toHaveLength(3)
+    expect(matchesOfTask('bmc-x5-2').flatMap((m) => m.exams)).toEqual(['bmc-past-2026-3', 'bmc-past-2025-3', 'bmc-past-2024f-3', 'bmc-past-2024-3'])
+    expect(matchesOfTask('bmc-x6-1').flatMap((m) => m.exams)).toEqual(['bmc-past-2026-1', 'bmc-past-2025-1', 'bmc-past-2024f-1', 'bmc-past-2024-1'])
+    expect(matchesOfTask('bmc-x7-4')[0].exams).toEqual(['bmc-past-2026-2'])
+    expect(matchesOfTask('bmc-x5-4')[0].exams).toEqual(['bmc-past-2026-4'])
+    const write2026 = examMatches.find((m) => m.topic === 'Regular or not? Three grammars').write[0].code
+    for (const k of ['a', 'b', 'c']) expect(write2026).toContain(`${k}) regular: ${EXAM_2026.regex[k].startsWith('|') ? `ε | ${EXAM_2026.regex[k].slice(1)}` : EXAM_2026.regex[k]}`)
     expect(EXAM_GRAMMARS.b).toBe('S → ε | ABS\nA → a | bA\nB → ε | bBb') // X5 T2 a)
   })
 })

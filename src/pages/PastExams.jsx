@@ -20,7 +20,7 @@ function taskLink(subjectId, id) {
 
 // Past exams of a course, translated into English and solved in the teacher's style. Like a paper exam: all questions on one page,
 // each with Show answer (and the Finnish original). The original exam paper can be shown as photos. ?exam=final-2024 picks the exam.
-// Each question says which exercise tasks it comes from (the 2026 exam page has them all).
+// Each question says which exercise tasks it comes from (the 2026 re-exam page has them all).
 function PastExams() {
   const { subjectId, week } = useParams()
   const { record } = useProgress()
@@ -44,11 +44,11 @@ function PastExams() {
       </div>
 
       <Card body className="mb-4">
-        <h2 className="h5 mb-1">{exam.title} <small className="text-body-secondary">({exam.finnishTitle}, {exam.points} points)</small></h2>
+        <h2 className="h5 mb-1">{exam.title} <small className="text-body-secondary">({exam.fromMemory ? 'written down from memory' : `${exam.finnishTitle}, ${exam.points} points`})</small></h2>
         {exam.instructions && <p className="mb-2">{exam.instructions}</p>}
         {exam.note && <p className="small mb-2"><strong>Note:</strong> {exam.note}</p>}
-        <p className="small text-body-secondary mb-2">{exam.questions.length} questions: {exam.questions.map((q) => `${q.no}) ${q.points} p`).join(' · ')}</p>
-        <Button size="sm" variant={paper ? 'secondary' : 'dark'} onClick={() => setPaper(!paper)} aria-expanded={paper}>{paper ? 'Hide the original exam paper' : 'Show the original exam paper'}</Button>
+        <p className="small text-body-secondary mb-2">{exam.questions.length} questions{exam.points ? `: ${exam.questions.map((q) => `${q.no}) ${q.points} p`).join(' · ')}` : ''}</p>
+        {exam.images.length > 0 && <Button size="sm" variant={paper ? 'secondary' : 'dark'} onClick={() => setPaper(!paper)} aria-expanded={paper}>{paper ? 'Hide the original exam paper' : 'Show the original exam paper'}</Button>}
         {paper && exam.images.map((img, i) => (
           <img key={img} src={`${base}docs/past/${img}`} alt={`${exam.finnishTitle}, page ${i + 1} (in Finnish)`} className="answer-page mt-3" loading="lazy" />
         ))}
