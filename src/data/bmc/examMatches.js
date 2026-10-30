@@ -9,27 +9,35 @@ const regex = (r) => (r.startsWith('|') ? `ε | ${r.slice(1)}` : r) // '' | x is
 
 export const examMatches = [
   // ---------- the 2026 exam ----------
-  { tasks: [['bmc-x6-1', 'X6 T1']], topic: 'Factorization: in P? In NP?',
+  { tasks: [['bmc-x6-1', 'X6 T1']], topic: 'Factorization: in P? In NP?', showQuestion: true, // the 2026 exam page shows the exam question
     exams: ['bmc-past-2026-1'], match: 'Near',
     how: 'The same questions as X6 T1 about another problem. The new part: the input is a number k, so the size of the input is the number of digits of k.',
     write: [
-      code(`Input: k written with n digits (n ≈ log k). The time is measured in n.
+      code(`Time complexity:
+k has n digits (n ≈ log k),
+so the time is measured in n.
+Trial division: try 2, 3, ..., √k
+√k ≈ 10^(n/2) divisions
+→ exponential: O(10^(n/2))
+(20 digits: 10¹⁰ divisions,
+ 100 digits: 10⁵⁰)
 
-Solve: trial division tries 2, 3, ..., √k
-  √k ≈ 10^(n/2) divisions: exponential in n
-  (20 digits: 10¹⁰, 100 digits: 10⁵⁰)
+How to analyze it: count the
+steps as a function of the input
+length n (the digits), like the
+2ⁿ subsets of subset sum.
 
-P?  Not known (as far as is known, no).
-    No polynomial algorithm for factoring
-    is known (RSA encryption relies on it).
+P?  Not known (as far as is
+    known, no). No polynomial
+    algorithm is known (RSA
+    encryption relies on this).
 
-NP? Yes, the yes/no version:
-    does k have a factor d, 1 < d < m?
-    guess d (n digits), divide k by d,
-    check the remainder is 0: O(n²)
-    → checked in polynomial time → NP
-    (a whole factorization k1·k2·…·km is
-    checked by multiplying the numbers)`),
+NP? Yes. Nondeterministically:
+    guess the factors k1, ..., km
+    multiply them: polynomial
+    compare with k: 1 step
+    → checked in polynomial
+      time → NP`),
       'The same pattern as subset sum (X6 T1): many possibilities to try, but a guess is checked fast. Say that the size of the input is the number of digits, not k: that is why √k divisions is not polynomial.',
     ] },
   { tasks: [['bmc-x7-4', 'X7 t4']], topic: 'Draw the languages as finite automata',

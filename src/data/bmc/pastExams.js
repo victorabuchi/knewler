@@ -171,7 +171,7 @@ const grammar2026Prompt = ['Consider the following context-free grammars over th
 const exam2026 = [
   { id: 'bmc-past-2026-1', no: 1, wrap: true, terms: TERMS.np,
     title: '2026 exam, question 1. Integer factorization: in P? In NP?',
-    prompt: ['Integer factorization. Let k be a positive integer. The task is to find its factorization: the numbers k1, k2, k3, … whose product is k (for example 84 = 2 · 2 · 3 · 7).', 'Does the problem belong to the class P? Does it belong to the class NP? Why?', '(Written down from memory: the wording on the paper was different.)'],
+    prompt: ['Integer factorization. Let k be a positive integer. The question is to find its factorization: the prime numbers k1, k2, k3, … whose product is k = k1 · k2 · k3 · … (for example 84 = 2 · 2 · 3 · 7).', 'What is the time complexity of solving this problem when the value of k is given? How do you analyze it? Does this problem belong to class P or NP?'],
     answer: [
       'Analyze it like the subset sum problem (exercise 6 task 1): how many possibilities are there to try, and how fast is a proposed answer checked? One thing is new: the input is a number. k is written with n digits (n ≈ log₁₀ k), and the time is measured in n, the length of the input, not in k.',
       code('P  = polynomial time, n^k for a fixed k (e.g. O(n), O(n²))\nNP = nondeterministic polynomial time: a proposed solution can be\n     verified in polynomial time, even if finding it may be hard\nexponential time = O(k^n) with a fixed base k > 1'),
@@ -247,7 +247,7 @@ export const pastExams = [
     id: 'final-2026', short: '2026 exam', title: '2026 exam (30.10.2026)', fromMemory: true,
     images: [],
     instructions: '',
-    note: 'Written down from memory right after the exam; there is no photo of the paper, and the points are not known. Question 1 is reworded. Questions 2–4 are exercise tasks: question 2 is exercise 7 task 4, question 3 is exercise 5 task 2 with one change in b) (B → b | bBb | ε), and question 4 is exercise 5 task 4.',
+    note: 'Written down from memory right after the exam; there is no photo of the paper, and the points are not known. Question 1 is written the way the lecturer writes the exercises (X6 T1). Questions 2–4 are exercise tasks: question 2 is exercise 7 task 4, question 3 is exercise 5 task 2 with one change in b) (B → b | bBb | ε), and question 4 is exercise 5 task 4.',
     questions: exam2026,
   },
   {

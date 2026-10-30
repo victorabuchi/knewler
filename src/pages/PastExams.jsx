@@ -20,7 +20,7 @@ function taskLink(subjectId, id) {
 
 // Past exams of a course, translated into English and solved in the teacher's style. Like a paper exam: all questions on one page,
 // each with Show answer (and the Finnish original). The original exam paper can be shown as photos. ?exam=final-2024 picks the exam.
-// Each question says which exercise tasks it comes from (the 2026 re-exam page has them all).
+// Each question says which exercise tasks it comes from (the 2026 exam page has them all).
 function PastExams() {
   const { subjectId, week } = useParams()
   const { record } = useProgress()
