@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import Crumbs from '../components/Crumbs.jsx'
@@ -8,6 +9,8 @@ import { matchOfQuestion } from '../data/bmc/examMatches'
 import { pastExams } from '../data/bmc/pastExams'
 import { useProgress } from '../hooks/useProgress'
 
+const base = import.meta.env.BASE_URL ?? './'
+
 // The Exercises page address of an exercise task: its sheet and its number in the sheet.
 function taskLink(subjectId, id) {
   const item = ITEMS.find((i) => i.id === id)
@@ -16,16 +19,17 @@ function taskLink(subjectId, id) {
 }
 
 // Past exams of a course, translated into English and solved in the teacher's style. Like a paper exam: all questions on one page,
-// each with Show answer (and the Finnish original). ?exam=final-2024 picks the exam.
+// each with Show answer (and the Finnish original). The original exam paper can be shown as photos. ?exam=final-2024 picks the exam.
 // Each question says which exercise tasks it comes from (the 2026 exam page has them all).
 function PastExams() {
   const { subjectId, week } = useParams()
   const { record } = useProgress()
   const [params, setParams] = useSearchParams()
+  const [paper, setPaper] = useState(false)
   if (subjectId !== 'bmc') return <Navigate to={`/s/${subjectId}`} replace />
 
   const exam = pastExams.find((e) => e.id === params.get('exam')) ?? pastExams[0]
-  const pick = (id) => setParams({ exam: id })
+  const pick = (id) => { setParams({ exam: id }); setPaper(false) }
   const taskLinks = (tasks) => tasks.map(([id, label], i) => <span key={id}>{i > 0 && ', '}<Link to={taskLink(subjectId, id)}>{label}</Link></span>)
   return (
     <>
@@ -43,7 +47,11 @@ function PastExams() {
         <h2 className="h5 mb-1">{exam.title} <small className="text-body-secondary">({exam.fromMemory ? 'written down from memory' : `${exam.finnishTitle}, ${exam.points} points`})</small></h2>
         {exam.instructions && <p className="mb-2">{exam.instructions}</p>}
         {exam.note && <p className="small mb-2"><strong>Note:</strong> {exam.note}</p>}
-        <p className="small text-body-secondary mb-0">{exam.questions.length} questions{exam.points ? `: ${exam.questions.map((q) => `${q.no}) ${q.points} p`).join(' · ')}` : ''}</p>
+        <p className="small text-body-secondary mb-2">{exam.questions.length} questions{exam.points ? `: ${exam.questions.map((q) => `${q.no}) ${q.points} p`).join(' · ')}` : ''}</p>
+        {exam.images.length > 0 && <Button size="sm" variant={paper ? 'secondary' : 'dark'} onClick={() => setPaper(!paper)} aria-expanded={paper}>{paper ? 'Hide the original exam paper' : 'Show the original exam paper'}</Button>}
+        {paper && exam.images.map((img, i) => (
+          <img key={img} src={`${base}docs/past/${img}`} alt={`${exam.finnishTitle}, page ${i + 1} (in Finnish)`} className="answer-page mt-3" loading="lazy" />
+        ))}
       </Card>
 
       {exam.questions.map((q) => {
