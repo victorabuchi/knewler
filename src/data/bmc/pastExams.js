@@ -245,27 +245,23 @@ d) { 0ᵖ1ʳ0ᵖ⁻ʳ | p ≥ r }
 export const pastExams = [
   {
     id: 'final-2026', short: '2026 exam', title: '2026 exam (30.10.2026)', fromMemory: true,
-    images: [],
     instructions: '',
-    note: 'Written down from memory right after the exam; there is no photo of the paper, and the points are not known. Question 1 is written the way the lecturer writes the exercises (X6 T1). Questions 2–4 are exercise tasks: question 2 is exercise 7 task 4, question 3 is exercise 5 task 2 with one change in b) (B → b | bBb | ε), and question 4 is exercise 5 task 4.',
+    note: 'Written down from memory right after the exam; the points are not known. Question 1 is written the way the lecturer writes the exercises (X6 T1). Questions 2–4 are exercise tasks: question 2 is exercise 7 task 4, question 3 is exercise 5 task 2 with one change in b) (B → b | bBb | ε), and question 4 is exercise 5 task 4.',
     questions: exam2026,
   },
   {
     id: 'final-2025', short: '2025 exam', title: '2025 exam (14.3.2025)', finnishTitle: 'Lopputentti 14.3.2025', points: 28,
-    images: ['bmc-final-2025-1.jpg', 'bmc-final-2025-2.jpg'],
     instructions: 'Calculators may not be used or even be present in the exam. JUSTIFYING your answers is important: the grader cannot get inside your head to see how the solution was formed, so justify your answers.',
     questions: finalExam('bmc-past-2025', '2025 exam'),
   },
   {
     id: 'final-2024', short: '2024 exam', title: '2024 exam', finnishTitle: 'Lopputentti', points: 28,
-    images: ['bmc-final-2024-1.jpg', 'bmc-final-2024-2.jpg'],
     instructions: 'Calculators may not be used or even be present in the exam. JUSTIFYING your answers is important: the grader cannot get inside your head to see how the solution was formed, so justify your answers.',
     note: 'The paper has no date. Its questions are word for word the same as the 2025 exam, so the answers are the same too.',
     questions: finalExam('bmc-past-2024f', '2024 exam'),
   },
   {
     id: 'retake-2024', short: '2024 re-exam', title: '2024 re-exam (3.5.2024)', finnishTitle: 'Uusintatentti 3.5.2024', points: 30,
-    images: ['bmc-retake-2024-1.jpg', 'bmc-retake-2024-2.jpg'],
     instructions: '',
     questions: [
       { id: 'bmc-past-2024-1', no: 1, points: 10, terms: TERMS.np,

@@ -230,8 +230,7 @@ describe('Past exams (translated and solved)', () => {
       '2026 exam, question 3. Regular or not? Three grammars',
       '2026 exam, question 4. Which model recognizes each language?',
     ])
-    expect(screen.getByText(/there is no photo of the paper/)).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Show the original exam paper' })).not.toBeInTheDocument()
+    expect(screen.getByText(/the points are not known/)).toBeInTheDocument()
     expect(screen.getByRole('article', { name: /2026 exam, question 2/ })).toHaveTextContent('From the exercises: X7 t4 (exact)')
     expect(screen.getByRole('article', { name: /2026 exam, question 4/ })).toHaveTextContent('From the exercises: X5 T4 (exact)')
     const q3 = within(screen.getByRole('article', { name: /2026 exam, question 3/ }))
@@ -255,7 +254,7 @@ describe('Past exams (translated and solved)', () => {
     ])
   })
 
-  it('shows the Finnish original, the original paper and the answer with the partition steps', async () => {
+  it('shows the Finnish original and the answer with the partition steps, and no photos of the exam papers', async () => {
     const user = userEvent.setup()
     renderApp('/s/bmc/all/past-exams?exam=final-2025')
     const q2 = screen.getByRole('article', { name: /question 2/ })
@@ -266,11 +265,11 @@ describe('Past exams (translated and solved)', () => {
     expect(answer).toHaveTextContent('P1 = {0}, {1, 2, 3}, {4}, {5}')
     expect(answer).toHaveTextContent('|w|a + 2|w|b ≡ 0 (mod 3)')
     expect(within(q2).getByText('d) the minimized automaton (mod 3)')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Show the original exam paper' }))
-    expect(screen.getAllByRole('img', { name: /Lopputentti 14\.3\.2025, page/ })).toHaveLength(2)
+    expect(screen.queryByRole('button', { name: /original exam paper/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: /Lopputentti/ })).not.toBeInTheDocument()
   })
 
-  it('switches to the 2024 exam: the same questions as 2025, with its own photos', async () => {
+  it('switches to the 2024 exam: the same questions as 2025', async () => {
     const user = userEvent.setup()
     renderApp('/s/bmc/all/past-exams')
     await user.click(screen.getByRole('button', { name: '2024 exam' }))
@@ -278,9 +277,6 @@ describe('Past exams (translated and solved)', () => {
     expect(screen.getByText(/word for word the same as the 2025 exam/)).toBeInTheDocument()
     expect(screen.getAllByRole('article')).toHaveLength(3)
     expect(screen.getByRole('article', { name: '2024 exam, question 1. The knapsack problem (8 p)' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Show the original exam paper' }))
-    const photos = screen.getAllByRole('img', { name: /Lopputentti, page/ })
-    expect(photos.map((i) => i.getAttribute('src').replace(/.*\//, ''))).toEqual(['bmc-final-2024-1.jpg', 'bmc-final-2024-2.jpg'])
   })
 
   it('switches to the 2024 re-exam', async () => {
